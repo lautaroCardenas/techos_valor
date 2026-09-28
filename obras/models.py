@@ -42,7 +42,7 @@ PROXIMA_ACCION = [
 class Obra(models.Model):
     direccion = models.CharField(max_length=100)
     fecha_contacto = models.DateField(auto_now_add=True)
-    observacion = models.TextField()
+    observacion = models.TextField(blank=True)
     negocio = models.BooleanField(default=True)
     zona = models.ForeignKey(Zona, on_delete=models.RESTRICT) 
     cliente = models.ForeignKey(Cliente, on_delete=models.RESTRICT)  
