@@ -39,8 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'obras',
     'presupuestos',
-    'pagos'
+    'pagos',
+    'login',
+    'ajustes',
+    'obras',
+    'pagos',
+    'presupuestos'
 ]
+
+AUTH_USER_MODEL = 'login.Usuario'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'techos_valor.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'techos_valor.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
