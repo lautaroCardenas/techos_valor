@@ -42,9 +42,6 @@ INSTALLED_APPS = [
     'pagos',
     'login',
     'ajustes',
-    'obras',
-    'pagos',
-    'presupuestos'
 ]
 
 AUTH_USER_MODEL = 'login.Usuario'
