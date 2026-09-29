@@ -2,25 +2,39 @@ from django.db import models
 
 # Create your models here.
 
-MATERIAL = [
-    ("aluminio", "Aluminio"),
-    ("antitermico", "Antitermico"),
-    ("geo_pintura", "Geotextil Pintura"),
-    ("geo_mordiente", "Geotextil Mordiente")
-]
+# MATERIAL = [
+#     ("aluminio", "Aluminio"),
+#     ("antitermico", "Antitermico"),
+#     ("geo_pintura", "Geotextil Pintura"),
+#     ("geo_mordiente", "Geotextil Mordiente")
+# ]
 
-SUPERFICIE = [
-    ("losa", "Losa"),
-    ("chapa", "Chapa")
-]
+class Material(models.Model):
+    material = models.CharField(max_length = 25)
+
+    def __str__(self):
+        return self.material
+
+# SUPERFICIE = [
+#     ("losa", "Losa"),
+#     ("chapa", "Chapa")
+# ]
+
+class Superficie(models.Model):
+    superficie = models.CharField(max_length = 25)
+
+    def __str__(self):
+        return self.superficie
 
 class Presupuesto(models.Model):
     aceptado = models.BooleanField(default=False)
     fecha_actual = models.DateTimeField(auto_now=True) # Se va a actualizar con cada actualizacion. Para que sea una sola vez al crearse sería: auto_now_add=True.
     metro_2 = models.DecimalField(max_digits=10, decimal_places=3)
     precio_metro = models.DecimalField(max_digits=10, decimal_places=3)
-    material = models.CharField(max_length=20, choices=MATERIAL)
-    superficie = models.CharField(max_length=20, choices=SUPERFICIE)
+    # material = models.CharField(max_length=20, choices=MATERIAL)
+    material = models.OneToOneField(Material, on_delete=models.RESTRICT)
+    # superficie = models.CharField(max_length=20, choices=SUPERFICIE)
+    superficie = models.OneToOneField(Superficie, on_delete=models.RESTRICT)
     observacion = models.TextField(blank=True)
     recargo_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0)
     descripcion_impresa = models.TextField(blank=True)
@@ -33,7 +47,7 @@ class Presupuesto(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Superficie: {self.superficie} - Material: {self.material} - Precio m2: {self.precio_metro} - Aceptado: {self.aceptado}"
+        return f"Cliente: {self.obra.cliente.nombre} {self.obra.cliente.apellido} - Monto: {self.monto} - Aceptado: {self.aceptado}"
 
     class Meta:
         ordering = ["fecha_actual", "obra"]
