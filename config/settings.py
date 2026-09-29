@@ -37,11 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'obras',
+    'presupuestos',
+    'pagos',
     'login',
     'ajustes',
     'obras',
     'pagos',
-    'presupuestos',
+    'presupuestos'
 ]
 
 AUTH_USER_MODEL = 'login.Usuario'
