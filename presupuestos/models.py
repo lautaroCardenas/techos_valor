@@ -1,27 +1,16 @@
 from django.db import models
+from servicios.validadores import solo_letras, valores_positivos
 
 # Create your models here.
 
-# MATERIAL = [
-#     ("aluminio", "Aluminio"),
-#     ("antitermico", "Antitermico"),
-#     ("geo_pintura", "Geotextil Pintura"),
-#     ("geo_mordiente", "Geotextil Mordiente")
-# ]
-
 class Material(models.Model):
-    material = models.CharField(max_length = 25)
+    material = models.CharField(max_length = 25, validators=[solo_letras])
 
     def __str__(self):
         return self.material
 
-# SUPERFICIE = [
-#     ("losa", "Losa"),
-#     ("chapa", "Chapa")
-# ]
-
 class Superficie(models.Model):
-    superficie = models.CharField(max_length = 25)
+    superficie = models.CharField(max_length = 25, validators=[solo_letras])
 
     def __str__(self):
         return self.superficie
@@ -29,17 +18,15 @@ class Superficie(models.Model):
 class Presupuesto(models.Model):
     aceptado = models.BooleanField(default=False)
     fecha_actual = models.DateTimeField(auto_now=True) # Se va a actualizar con cada actualizacion. Para que sea una sola vez al crearse sería: auto_now_add=True.
-    metro_2 = models.DecimalField(max_digits=10, decimal_places=3)
-    precio_metro = models.DecimalField(max_digits=10, decimal_places=3)
-    # material = models.CharField(max_length=20, choices=MATERIAL)
+    metro_2 = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
+    precio_metro = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
     material = models.OneToOneField(Material, on_delete=models.RESTRICT)
-    # superficie = models.CharField(max_length=20, choices=SUPERFICIE)
     superficie = models.OneToOneField(Superficie, on_delete=models.RESTRICT)
     observacion = models.TextField(blank=True)
-    recargo_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    recargo_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0, validators=[valores_positivos])
     descripcion_impresa = models.TextField(blank=True)
     obra = models.ForeignKey("obras.Obra", on_delete=models.RESTRICT) # Si el presupuesto se rechaza y se realiza uno nuevo, cada obra tendra mas de un presupuesto.
-    monto = models.DecimalField(max_digits=10, decimal_places=3)
+    monto = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
 
     def save(self, *args, **kwargs):
         subtotal = self.precio_metro * self.metro_2

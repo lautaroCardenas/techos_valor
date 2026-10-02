@@ -1,15 +1,16 @@
 from django.db import models
 from decimal import Decimal
+from servicios.validadores import valores_positivos
 
 # Create your models here.
 
 class Pagos(models.Model):
-    numero = models.IntegerField()
-    monto_pagado = models.DecimalField(max_digits=10, decimal_places=3)
+    numero = models.IntegerField(validators=[valores_positivos])
+    monto_pagado = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
     resto = models.DecimalField(max_digits=10, decimal_places=3, editable=False)
     presupuesto = models.ForeignKey('presupuestos.Presupuesto', on_delete=models.RESTRICT)
-    comision_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0)
-    comision_monto = models.DecimalField(max_digits=10, decimal_places=3)
+    comision_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0, validators=[valores_positivos])
+    comision_monto = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
 
     def save(self, *args, **kwargs):
         pagos_previos = Pagos.objects.filter(presupuesto=self.presupuesto).exclude(pk=self.pk) # Buscar pagos que pertenecen al mismo presupuesto.
