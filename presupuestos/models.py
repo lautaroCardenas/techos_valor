@@ -20,8 +20,8 @@ class Presupuesto(models.Model):
     fecha_actual = models.DateTimeField(auto_now=True) # Se va a actualizar con cada actualizacion. Para que sea una sola vez al crearse sería: auto_now_add=True.
     metro_2 = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
     precio_metro = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
-    material = models.OneToOneField(Material, on_delete=models.RESTRICT)
-    superficie = models.OneToOneField(Superficie, on_delete=models.RESTRICT)
+    material = models.ForeignKey(Material, on_delete=models.RESTRICT)
+    superficie = models.ForeignKey(Superficie, on_delete=models.RESTRICT)
     observacion = models.TextField(blank=True)
     recargo_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0, validators=[valores_positivos])
     descripcion_impresa = models.TextField(blank=True)

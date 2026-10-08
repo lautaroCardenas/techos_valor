@@ -45,8 +45,8 @@ class Obra(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.RESTRICT)  
     estado = models.ForeignKey(EstadoObra, on_delete=models.SET_NULL, null=True)
     garantia = models.BooleanField(default=True)
-    proxima_accion = models.ForeignKey(ProximaAccion, on_delete=models.SET_NULL, null=True)
-    fecha_visita = models.ForeignKey(FechaVisita, on_delete=models.RESTRICT)
+    proxima_accion = models.ForeignKey(ProximaAccion, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_visita = models.ForeignKey(FechaVisita, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         ordering = ["cliente", "fecha_contacto"]

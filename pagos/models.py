@@ -1,18 +1,23 @@
 from django.db import models
 from decimal import Decimal
-from servicios.validadores import valores_positivos
+from servicios.validadores import valores_positivos, campo_obligatorio
 
 # Create your models here.
 
 class Pagos(models.Model):
     numero = models.IntegerField(validators=[valores_positivos])
     monto_pagado = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
-    resto = models.DecimalField(max_digits=10, decimal_places=3, editable=False)
+    resto = models.DecimalField(max_digits=10, decimal_places=3, editable=False, validators=[valores_positivos])
     presupuesto = models.ForeignKey('presupuestos.Presupuesto', on_delete=models.RESTRICT)
-    comision_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0, validators=[valores_positivos])
-    comision_monto = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
+    comision_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, default=0, validators=[valores_positivos], null=True, blank=True)
+    comision_monto = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos], null=True, blank=True)
 
-    def save(self, *args, **kwargs):
+    def clean(self):
+        super().clean()
+
+        if self.presupuesto_id and self.presupuesto.obra.negocio:
+            campo_obligatorio(self.comision_porcentaje)
+
         pagos_previos = Pagos.objects.filter(presupuesto=self.presupuesto).exclude(pk=self.pk) # Buscar pagos que pertenecen al mismo presupuesto.
         
         total_pagado = 0
@@ -23,7 +28,21 @@ class Pagos(models.Model):
 
         self.resto = self.presupuesto.monto - total_pagado
 
-        if self.resto < 0:
+        valores_positivos(self.resto)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        pagos_previos = Pagos.objects.filter(presupuesto=self.presupuesto).exclude(pk=self.pk) # Buscar pagos que pertenecen al mismo presupuesto.
+        
+        total_pagado = 0
+        for p in pagos_previos: # Calcular cuánto el cliente ya pagó.
+            total_pagado += p.monto_pagado
+
+        total_pagado += self.monto_pagado # Agregar lo que acaba de pagar.
+
+        self.resto = self.presupuesto.monto - total_pagado
+
+        if self.resto == 0:
             self.resto = Decimal('0.000')
 
         if self.presupuesto.obra.negocio:

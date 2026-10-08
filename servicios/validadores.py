@@ -11,7 +11,10 @@ def solo_letras(valor):
         raise ValidationError("Solo puede contener letras y '-.,°'")
 
 def valores_positivos(valor):
-    valor_limpio = colapsar_espacios(valor)
 
-    if valor_limpio <= 0:
+    if valor < 0:
         raise ValidationError("El número no puede ser negativo")
+
+def campo_obligatorio(valor):
+    if valor is None or valor == 0:
+        raise ValidationError("El campo es obligatorio")
