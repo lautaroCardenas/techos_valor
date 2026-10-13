@@ -1,0 +1,7 @@
+from django.urls import path
+from .views import pagos_total, pago_detalle
+
+urlpatterns = [
+    path('', pagos_total),
+    path('<int:pk>/', pago_detalle)
+]
