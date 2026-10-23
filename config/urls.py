@@ -22,9 +22,9 @@ handler404 = not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('login.urls'), namespace="login"),
-    path('obras/', include('obras.urls'), namespace="obras"),
-    path('presupuestos/', include('presupuestos.urls'), namespace="presupuestos"),
-    path('pagos/', include('pagos.urls'), namespace="pagos"),
-    path('ajustes/', include('ajustes.urls'), namespace="ajustes")
+    path('', include('login.urls', namespace="login")),
+    path('obras/', include('obras.urls', namespace="obras")),
+    path('presupuestos/', include('presupuestos.urls', namespace="presupuestos")),
+    path('pagos/', include('pagos.urls', namespace="pagos")),
+    path('ajustes/', include('ajustes.urls', namespace="ajustes"))
 ]

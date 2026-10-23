@@ -1,3 +1,48 @@
-<h1>
-    Hi from base
-</h1>
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/logo"
+      href="{% static 'images/techos_valor_logo.png' %}"
+    />
+    <title>Techos Valor | {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="navbar__home">
+          <a href="{% url 'ajustes:ajustes' %}" class="navbar__link">
+            <img
+              src="{% static 'images\techos_valor_logo.png' %}"
+              alt="brands logo"
+            />
+          </a>
+        </div>
+        <ul>
+          <li>
+            <a
+              href="{% url 'presupuestos:presupuestos_total' %}"
+              class="navbar__link"
+              >Presupuestos</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'obras:obras_total' %}" class="navbar__link"
+              >Obras</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'pagos:pagos_total' %}" class="navbar__link"
+              >Pagos</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+  </body>
+</html>
