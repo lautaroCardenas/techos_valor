@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="icon"
-      type="image/logo"
+      type="image/png"
       href="{% static 'images/techos_valor_logo.png' %}"
     />
     <title>Techos Valor | {% block title %}{% endblock %}</title>
@@ -17,7 +17,7 @@
         <div class="navbar__home">
           <a href="{% url 'ajustes:ajustes' %}" class="navbar__link">
             <img
-              src="{% static 'images\techos_valor_logo.png' %}"
+              src="{% static 'images/techos_valor_logo.png' %}"
               alt="brands logo"
             />
           </a>
@@ -44,5 +44,6 @@
       </nav>
     </header>
     <main>{% block content %}{% endblock %}</main>
+  <script src="{% static 'js/modal-presupuesto.js' %}"></script>
   </body>
 </html>

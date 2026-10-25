@@ -4,6 +4,111 @@
 
 {% block content %}
 <section class="presupuestos">
-  <h1>Hi from presupuestos</h1>
+  <div class="presupuestos__header">
+    <h1 class="presupuestos__title">
+      Presupuestos
+    </h1>
+    <p class="presupuestos__subtitle">
+      Registro de presupuestos. 
+    </p>
+    <div class="presupuestos__buscar">
+      <form method="get" action="" class="presupuestos__form">
+        <div class="presupuestos__opciones">
+          <input type="text" class="presupuestos__input" name="search" value="{{search_input}}" placeholder="Buscar por cliente, direccion o material...">
+          <button type="button" class="presupuestos__btn__agregar" id="modal__abrir">Agregar presupuesto</button>
+        </div>
+
+        <select name="filter" id="filter" class="presupuestos__select">
+          <option value="">Proxima acción</option>
+          {% for a in proxima_acciones %}
+            <option value="{{a.accion}}" {% if search_filter == a.accion %}selected{%endif%}>{{a.accion}}</option>
+          {% endfor %}
+        </select>
+        <select name="estado_filter" id="estado_filter">
+          <option value="">Estado de la obra</option>
+          {% for e in estados_obra %}
+            <option value="{{e.estado}}" {% if estado_filter == e.estado %}selected{% endif %}>
+              {{e.estado}}
+            </option>
+          {% endfor %}
+        </select>
+        <label for="" class="presupuesto__negocio">
+          <input type="checkbox" name="negocio_filter" {% if negocio_filter %}checked{% endif %}>
+          Es del negocio
+        </label>
+        <button class="presupuestos__btn">Buscar</button>
+      </form>
+    </div>
+
+
+    <div class="presupuesto__modal" id="presupuesto__modal" hidden>
+      <div class="presupuesto__modal__contenido">
+        <button type="button" class="modal__cerrar" id="modal__cerrar">
+          &times;
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="#000000" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+        </button>
+        {% include 'presupuestos/presupuesto_crear.html' %}
+      </div>
+    </div>
+
+    <div class="presupuestos__buscar__resultado">
+      {% if search_input %}
+        {% if not presupuestos %}
+          <p class="presupuestos__buscar__error">No se encontraron presupuestos</p>
+        {% else %}
+          <p class="presupuestos__buscar__exito">Se encontraron {{presupuestos.count}} presupuestos</p>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="presupuestos__mostrar">
+      {% if presupuestos %}
+        <div class="presupuestos__mostrar__panel">
+          {% for p in presupuestos %}
+            <a href="{% url 'presupuestos:presupuesto_detalle' p.pk %}" class="presupuestos__mostrar__link">
+              <div class="presupuestos__mostrar_tarjeta">
+                <div class="presupuestos__data">
+                  <h1 class="presupuestos__data__title">
+                    {{p.obra.cliente.nombre}} {{p.obra.cliente.apellido}}
+                  </h1>
+                  <p class="presupuestos__data__subtitle">
+                    {{p.obra.direccion}} | {{p.obra.zona.localidad}}
+                  </p>
+                  <p class="presupuestos__data__fecha">
+                    Contacto: {{p.fecha_actual}}
+                  </p>
+                  <ul>
+                    <li>
+                      Superficie: {{p.superficie}}
+                    </li>
+                    <li>
+                      M2: {{p.metro_2}}
+                    </li>
+                  </ul>
+                  {% if p.aceptado %} 
+                    <p class="presupuesto__aceptado">Aceptado</p>
+                  {%else %}
+                    <p class="presupuesto__rechazado">No aceptado</p>
+                  {%endif%}
+                  </div>
+              </div>
+            </a>
+            <!-- AGREGAR VALIDACION DE LOG IN PARA EDITAR Y BORRAR OBRAS -->
+            <div class="obras__data__acciones">
+                <button class="obras__acciones__editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m16.475 5.408l2.117 2.117m-.756-3.982L12.109 9.27a2.1 2.1 0 0 0-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 1 0-2.621-2.621"/><path d="M19 15v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3"/></g></svg>
+                </button>
+                <button class="obras__acciones__borrar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" width="24" height="24"><path fill="#000000" d="M11.5-.031c-1.958 0-3.531 1.627-3.531 3.594V4H4c-.551 0-1 .449-1 1v1H2v2h2v15c0 1.645 1.355 3 3 3h12c1.645 0 3-1.355 3-3V8h2V6h-1V5c0-.551-.449-1-1-1h-3.969v-.438c0-1.966-1.573-3.593-3.531-3.593zm0 2.062h3c.804 0 1.469.656 1.469 1.531V4H10.03v-.438c0-.875.665-1.53 1.469-1.53zM6 8h5.125c.124.013.247.031.375.031h3c.128 0 .25-.018.375-.031H20v15c0 .563-.437 1-1 1H7c-.563 0-1-.437-1-1zm2 2v12h2V10zm4 0v12h2V10zm4 0v12h2V10z"/></svg>
+                </button>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="presupuestos__no">No se encontraron presupuestos</p>
+      {% endif %}
+    </div>
+  </div>
+  <!-- AGREGAR PARA DESCARGAR EL PRESUPUESTO EN PDF -->
 </section>
 {% endblock %}

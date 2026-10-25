@@ -1,0 +1,10 @@
+
+<section class="presupuestonuevo">
+    <h1>Nuevo presupuesto</h1>
+
+    <form method="post" action="{% url 'presupuestos:presupuesto_crear' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar presupuesto</button>
+    </form>
+</section>
