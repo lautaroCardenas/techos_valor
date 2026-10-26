@@ -53,46 +53,55 @@
 
     <div class="presupuestos__buscar__resultado">
       {% if search_input %}
-        {% if not presupuestos %}
+        {% if not obras %}
           <p class="presupuestos__buscar__error">No se encontraron presupuestos</p>
         {% else %}
-          <p class="presupuestos__buscar__exito">Se encontraron {{presupuestos.count}} presupuestos</p>
+          <p class="presupuestos__buscar__exito">Se encontraron {{obras.count}} presupuestos</p>
         {% endif %}
       {% endif %}
     </div>
 
     <div class="presupuestos__mostrar">
-      {% if presupuestos %}
+      {% if obras %}
         <div class="presupuestos__mostrar__panel">
-          {% for p in presupuestos %}
-            <a href="{% url 'presupuestos:presupuesto_detalle' p.pk %}" class="presupuestos__mostrar__link">
-              <div class="presupuestos__mostrar_tarjeta">
-                <div class="presupuestos__data">
-                  <h1 class="presupuestos__data__title">
-                    {{p.obra.cliente.nombre}} {{p.obra.cliente.apellido}}
-                  </h1>
-                  <p class="presupuestos__data__subtitle">
-                    {{p.obra.direccion}} | {{p.obra.zona.localidad}}
-                  </p>
-                  <p class="presupuestos__data__fecha">
-                    Contacto: {{p.fecha_actual}}
-                  </p>
-                  <ul>
-                    <li>
-                      Superficie: {{p.superficie}}
-                    </li>
-                    <li>
-                      M2: {{p.metro_2}}
-                    </li>
-                  </ul>
-                  {% if p.aceptado %} 
-                    <p class="presupuesto__aceptado">Aceptado</p>
-                  {%else %}
-                    <p class="presupuesto__rechazado">No aceptado</p>
-                  {%endif%}
-                  </div>
+          {% for o in obras %}
+            <div class="presupuesto__info">
+              {% with presupuesto_principal=o.presupuesto_set.first %}
+              {% if presupuesto_principal %}
+              <a href="{% url 'presupuestos:presupuesto_detalle' presupuesto_principal.pk %}" class="presupuestos__mostrar__link">
+              {% else %}
+              <div class="presupuestos__mostrar__link">
+              {% endif %}
+                <div class="presupuestos__mostrar_tarjeta">
+                  <div class="presupuestos__data">
+                    <h1 class="presupuestos__data__title">
+                      {{o.cliente.nombre}} {{o.cliente.apellido}}
+                    </h1>
+                    <p class="presupuestos__data__subtitle">
+                      {{o.direccion}} | {{o.zona.localidad}}
+                    </p>
+
+                    {% if o.presupuesto_set.aceptado %} 
+                      <p class="presupuesto__aceptado">Aceptado</p>
+                    {%else %}
+                      <p class="presupuesto__rechazado">No aceptado</p>
+                    {%endif%}
+                    </div>
+                </div>
+              {% if presupuesto_principal %}
+              </a>
+              {% else %}
               </div>
-            </a>
+              {% endif %}
+              {% endwith %}
+              {% for p in o.presupuesto_set.all %}
+                <button type="button" class="presupuesto__btn" data-modal="presupuesto-modal-{{p.pk}}">
+                  Presupuesto {{forloop.counter}}
+                </button>
+                {% include 'presupuestos/presupuesto_detalle.html' with presupuesto=p %}
+              {% endfor %}
+            </div>
+
             <!-- AGREGAR VALIDACION DE LOG IN PARA EDITAR Y BORRAR OBRAS -->
             <div class="obras__data__acciones">
                 <button class="obras__acciones__editar">

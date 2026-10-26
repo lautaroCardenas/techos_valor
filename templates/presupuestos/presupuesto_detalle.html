@@ -1,3 +1,87 @@
-<h1>
-    Presupuesto {{pk}}
-</h1>
+<div
+    class="presupuesto__modal"
+    id="presupuesto-modal-{{ presupuesto.pk }}"
+    hidden
+>
+        <div class="presupuesto__modal__contenido">
+
+            <button
+                type="button"
+                class="presupuesto__modal__cerrar"
+            >
+                &times;
+            </button>
+
+            <h2>
+                Presupuesto {{ forloop.counter }}
+            </h2>
+
+            <p>
+                <strong>Cliente:</strong>
+                {{ presupuesto.obra.cliente.nombre }}
+                {{ presupuesto.obra.cliente.apellido }}
+            </p>
+
+            <p>
+                <strong>Dirección:</strong>
+                {{ presupuesto.obra.direccion }}
+            </p>
+
+            <p>
+                <strong>Zona:</strong>
+                {{ presupuesto.obra.zona.localidad }}
+            </p>
+
+            <p>
+                <strong>Fecha:</strong>
+                {{ presupuesto.fecha_actual }}
+            </p>
+
+            <p>
+                <strong>Material:</strong>
+                {{ presupuesto.material.material }}
+            </p>
+
+            <p>
+                <strong>Superficie:</strong>
+                {{ presupuesto.superficie.superficie }}
+            </p>
+
+            <p>
+                <strong>M2:</strong>
+                {{ presupuesto.metro_2 }}
+            </p>
+
+            <p>
+                <strong>Precio por M2:</strong>
+                {{ presupuesto.precio_metro }}
+            </p>
+
+            <p>
+                <strong>Recargo:</strong>
+                {{ presupuesto.recargo_porcentaje }}%
+            </p>
+
+            <p>
+                <strong>Monto:</strong>
+                {{ presupuesto.monto }}
+            </p>
+
+            <p>
+                <strong>Observación:</strong>
+                {{ presupuesto.observacion }}
+            </p>
+
+            <p>
+                <strong>Descripción impresa:</strong>
+                {{ presupuesto.descripcion_impresa }}
+            </p>
+
+            {% if presupuesto.aceptado %}
+                <p>Aceptado</p>
+            {% else %}
+                <p>No aceptado</p>
+            {% endif %}
+
+        </div>
+    </div>
