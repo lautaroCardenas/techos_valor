@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Presupuesto
 from django.db.models import Q, Count
 from obras.models import Obra, ProximaAccion, EstadoObra
-from obras.forms import ObraForm
+from obras.forms import ObraForm, ClienteForm
 from .forms import PresupuestoForm
 
 # Create your views here.
@@ -44,13 +44,20 @@ def presupuestos_total(request):
     proxima_acciones = ProximaAccion.objects.all().order_by('accion')
     estados_obra = EstadoObra.objects.all().order_by('estado')
     # form = PresupuestoForm()
-    obra_form = ObraForm()
-    datos_presupuesto = request.session.pop(
+    datos_presupuesto = request.session.get(
         "presupuesto_pendiente", {}
     )
+    datos_obra = request.session.get("obra_pendiente", {})
     form = PresupuestoForm(initial=datos_presupuesto)
+    obra_form = ObraForm(initial=datos_obra)
+    cliente_form = ClienteForm()
 
-    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form})
+    abrir_modal_obra = request.session.pop("abrir_modal_obra", False)
+    abrir_modal_presupuesto = request.session.pop(
+        "abrir_modal_presupuesto", False
+    )
+
+    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form, 'cliente_form': cliente_form, 'abrir_modal_obra':abrir_modal_obra, 'abrir_modal_presupuesto': abrir_modal_presupuesto})
 
 def presupuesto_detalle(request, pk):
     try:

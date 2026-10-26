@@ -40,6 +40,12 @@
       </form>
     </div>
 
+    <div
+    id="modal-state"
+    data-abrir-presupuesto="{{ abrir_modal_presupuesto|yesno:'true,false' }}"
+    data-abrir-obra="{{ abrir_modal_obra|yesno:'true,false' }}"
+    hidden
+    ></div>
 
     <div class="presupuesto__modal" id="presupuesto__modal" hidden>
       <div class="presupuesto__modal__contenido">

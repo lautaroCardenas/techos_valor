@@ -1,0 +1,28 @@
+
+<div
+    class="cliente__modal"
+    id="cliente__modal"
+    data-abrir="{{ abrir_modal_cliente|yesno:'true,false' }}"
+    hidden
+>
+    <div class="cliente__modal__contenido">
+        <button type="button" id="modal__cerrar__cliente">
+            Cerrar
+        </button>
+
+        <h2>Nuevo cliente</h2>
+
+        <form
+            method="post"
+            action="{% url 'obras:cliente_crear' %}"
+            id="cliente__form"
+        >
+            {% csrf_token %}
+            <input type="hidden" name="origen" value="obra_crear">
+
+            {{ cliente_form.as_p }}
+
+            <button type="submit">Guardar cliente</button>
+        </form>
+    </div>
+</div>

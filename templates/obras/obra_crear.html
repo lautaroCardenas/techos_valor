@@ -1,9 +1,34 @@
+
 <section class="obranueva">
     <h1>Nueva obra</h1>
 
-    <form method="post" action="{% url 'obras:obra_crear' %}">
+    <form
+        method="post"
+        action="{% url 'obras:obra_crear' %}"
+        id="obra__form"
+    >
         {% csrf_token %}
-        {{ obra_form.as_p }}
+        <input type="hidden" name="origen" value="obra_crear">
+
+        <div class="obranueva__cliente">
+            {{ obra_form.cliente }}
+
+            <button type="button" id="modal__abrir__cliente">
+                Nuevo cliente
+            </button>
+        </div>
+
+        {{ obra_form.direccion.as_field_group }}
+        {{ obra_form.zona.as_field_group }}
+        {{ obra_form.observacion.as_field_group }}
+        {{ obra_form.negocio.as_field_group }}
+        {{ obra_form.estado.as_field_group }}
+        {{ obra_form.garantia.as_field_group }}
+        {{ obra_form.proxima_accion.as_field_group }}
+        {{ obra_form.fecha_visita.as_field_group }}
+
         <button type="submit">Guardar obra</button>
     </form>
 </section>
+
+{% include 'obras/cliente_crear.html' %}
