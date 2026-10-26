@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Presupuesto
 from django.db.models import Q, Count
 from obras.models import Obra, ProximaAccion, EstadoObra
+from obras.forms import ObraForm
 from .forms import PresupuestoForm
 
 # Create your views here.
@@ -29,7 +30,7 @@ def presupuestos_total(request):
     estado_filter = request.GET.get('estado_filter', '').strip()
     if (estado_filter):
         obras = obras.filter(
-            estado_obra__estado=estado_filter
+            estado__estado=estado_filter
         ) 
 
     negocio_filter = request.GET.get('negocio_filter') == 'on'
@@ -42,9 +43,14 @@ def presupuestos_total(request):
 
     proxima_acciones = ProximaAccion.objects.all().order_by('accion')
     estados_obra = EstadoObra.objects.all().order_by('estado')
-    form = PresupuestoForm()
+    # form = PresupuestoForm()
+    obra_form = ObraForm()
+    datos_presupuesto = request.session.pop(
+        "presupuesto_pendiente", {}
+    )
+    form = PresupuestoForm(initial=datos_presupuesto)
 
-    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form})
+    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form})
 
 def presupuesto_detalle(request, pk):
     try:
@@ -55,6 +61,8 @@ def presupuesto_detalle(request, pk):
 
 def presupuesto_crear(request):
     try:
+        form = PresupuestoForm()
+        obra_form = ObraForm()
         if request.method == 'POST':
             form = PresupuestoForm(request.POST)
 
@@ -63,6 +71,6 @@ def presupuesto_crear(request):
                 return redirect('presupuestos:presupuestos_total')
         else:
             form = PresupuestoForm()
-        return render(request, 'presupuestos/presupuesto_crear.html', {'form': form})
+        return render(request, 'presupuestos/presupuesto_crear.html', {'form': form, 'obra_form': obra_form})
     except:
         return render(request, 'not_found.html')

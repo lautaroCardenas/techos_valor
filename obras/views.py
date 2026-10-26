@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Obra
 from django.db.models import Q
+from .forms import ObraForm
 
 # Create your views here.
 def obras_total(request):
@@ -22,4 +23,34 @@ def obra_detalle(request, pk):
         return render(request, 'obras/obra_detalle.html', {'obra': obra})
     except: # Si no encuentra la obra con el id ingresado como parámetro, retorna un template de not found.
         return render(request, 'not_found.html')
-    
+
+
+def obra_crear(request):
+    try:
+        if request.method == 'POST':
+            form = ObraForm(request.POST)
+
+            if form.is_valid():
+                obra = form.save()
+                campos_presupuesto = [
+                    "metro_2",
+                    "precio_metro",
+                    "material",
+                    "superficie",
+                    "obra",
+                    "observacion",
+                    "recargo_porcentaje",
+                    "descripcion_impresa",
+                ]
+                datos_presupuesto = {
+                    campo: request.POST.get(f"presupuesto__{campo}", "")
+                    for campo in campos_presupuesto
+                }
+                datos_presupuesto["obra"] = str(obra.pk)
+                request.session["presupuesto_pendiente"] = datos_presupuesto
+                return redirect("presupuestos:presupuestos_total")
+        else:
+            form = ObraForm()
+        return render(request, 'obras/obra_crear.html', {'obra_form': form})
+    except:
+        return render(request, 'not_found.html')

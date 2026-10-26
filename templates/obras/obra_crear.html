@@ -1,0 +1,9 @@
+<section class="obranueva">
+    <h1>Nueva obra</h1>
+
+    <form method="post" action="{% url 'obras:obra_crear' %}">
+        {% csrf_token %}
+        {{ obra_form.as_p }}
+        <button type="submit">Guardar obra</button>
+    </form>
+</section>
