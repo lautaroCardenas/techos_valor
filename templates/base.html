@@ -1,3 +1,39 @@
-<h1>
-    Hi from base
-</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Techos Valor{% endblock %}</title>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <header class="topbar">
+    <a href="{% url 'obras:obras_total' %}" class="brand">Techos Valor</a>
+    <nav>
+      <a href="{% url 'obras:obras_total' %}">Obras</a>
+      <a href="{% url 'presupuestos:presupuestos_total' %}">Presupuestos</a>
+      <a href="{% url 'pagos:pagos_total' %}">Pagos</a>
+      <a href="{% url 'ajustes:ajustes' %}">Ajustes</a>
+    </nav>
+    <form method="post" action="{% url 'login:logout' %}" class="logout">
+      {% csrf_token %}
+      <span>{{ user }}</span>
+      <button type="submit">Cerrar sesión</button>
+    </form>
+  </header>
+  {% endif %}
+
+  <main>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li class="message message-{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

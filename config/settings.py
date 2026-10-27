@@ -58,9 +58,44 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # Todas las vistas exigen sesión iniciada salvo las marcadas con @login_not_required.
+    'django.contrib.auth.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+# Autenticación
+
+AUTHENTICATION_BACKENDS = [
+    'login.backends.EmailBackend',          # login del sistema (email + contraseña)
+    'django.contrib.auth.backends.ModelBackend',  # login del /admin (usuario + contraseña)
+]
+
+LOGIN_URL = 'login:login'
+LOGIN_REDIRECT_URL = 'obras:obras_total'
+LOGOUT_REDIRECT_URL = 'login:login'
+
+# Bloqueo por fuerza bruta: intentos fallidos por IP + email antes de bloquear.
+LOGIN_MAX_INTENTOS = 5
+LOGIN_BLOQUEO_SEGUNDOS = 15 * 60
+
+# La sesión dura 8 horas y se cierra al cerrar el navegador.
+SESSION_COOKIE_AGE = 8 * 60 * 60
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+if not DEBUG:
+    # En producción las cookies viajan solo por HTTPS.
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True').lower() in ('true', '1', 't')
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 30
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    X_FRAME_OPTIONS = 'DENY'
 
 ROOT_URLCONF = 'config.urls'
 
@@ -121,9 +156,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-ar'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 

@@ -1,5 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Ingresar | Techos Valor{% endblock %}
+
+{% block content %}
 <section class="login">
-    <h1>
-        Hi from login
-    </h1>
+  <h1>Techos Valor</h1>
+  <p>Ingresá con tu email y contraseña.</p>
+
+  <form method="post" action="{% url 'login:login' %}" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+
+    {% if form.non_field_errors %}
+    <div class="form-errors" role="alert">
+      {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="field">
+      <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+      {{ form.email }}
+      {% for error in form.email.errors %}<small class="error">{{ error }}</small>{% endfor %}
+    </div>
+
+    <div class="field">
+      <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+      {{ form.password }}
+      {% for error in form.password.errors %}<small class="error">{{ error }}</small>{% endfor %}
+    </div>
+
+    <button type="submit">Ingresar</button>
+  </form>
+
+  <p>¿No tenés cuenta? <a href="{% url 'login:registro' %}">Registrate</a></p>
 </section>
+{% endblock %}

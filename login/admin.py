@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario
+from .models import EmailPermitido, Usuario
 
 
 @admin.register(Usuario)
@@ -13,3 +13,11 @@ class UsuarioAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
         ("Datos adicionales", {"fields": ("telefono",)}),
     )
+
+
+@admin.register(EmailPermitido)
+class EmailPermitidoAdmin(admin.ModelAdmin):
+    list_display = ("email", "nota", "activo", "creado")
+    list_filter = ("activo",)
+    search_fields = ("email", "nota")
+    list_editable = ("activo",)
