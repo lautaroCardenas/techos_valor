@@ -4,6 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'styles/global.css' %}">
+    {% block extra_css %}{% endblock %}
     <link
       rel="icon"
       type="image/png"
@@ -12,17 +14,18 @@
     <title>Techos Valor | {% block title %}{% endblock %}</title>
   </head>
   <body>
-    <header>
+    <header class="header">
       <nav class="navbar">
         <div class="navbar__home">
-          <a href="{% url 'ajustes:ajustes' %}" class="navbar__link">
+          <a href="{% url 'ajustes:ajustes' %}">
             <img
+              class="navbar__logo"
               src="{% static 'images/techos_valor_logo.png' %}"
               alt="brands logo"
             />
           </a>
         </div>
-        <ul>
+        <ul class="navbar__links">
           <li>
             <a
               href="{% url 'presupuestos:presupuestos_total' %}"

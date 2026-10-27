@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/ajustes.css' %}">
+{% endblock %}
 
 {% block title %}Ajustes{% endblock %}
 
@@ -18,13 +23,16 @@
             Zonas
         </h3>
         {% if zonas_cargadas %}
+        <div class="ajustes__lista">
             {% for z in zonas_cargadas %}
-                <p>
+                <p class="ajustes__dato">
                     {{z.localidad}}
                 </p>
             {% endfor %}
+        </div>
+
         {% else %}
-            <p>
+            <p class="ajustes__vacio">
                 No hay zonas cargadas aún
             </p>
         {% endif %}
@@ -40,13 +48,16 @@
             Proxima acción
         </h3>
         {% if acciones_cargadas %}
+        <div class="ajustes__lista">
             {% for a in acciones_cargadas %}
-                <p>
+                <p class="ajustes__dato">
                     {{a.accion}}
                 </p>
             {% endfor %}
+        </div>
+
         {% else %}
-            <p>
+            <p class="ajustes__vacio">
                 No hay acciones cargadas aún
             </p>
         {% endif %}
@@ -63,13 +74,16 @@
             Estado de la obra
         </h3>
         {% if estados_cargados %}
+        <div class="ajustes__lista">
             {% for e in estados_cargados %}
-                <p>
+                <p class="ajustes__dato">
                     {{e.estado}}
                 </p>
             {% endfor %}
+        </div>
+
         {% else %}
-            <p>
+            <p class="ajustes__vacio">
                 No hay estados cargados aún
             </p>
         {% endif %}
@@ -85,13 +99,16 @@
             Material de obra
         </h3>
         {% if materiales_cargados %}
+        <div class="ajustes__lista">
             {% for m in materiales_cargados %}
-                <p>
+                <p class="ajustes__dato">
                     {{m.material}}
                 </p>
             {% endfor %}
+        </div>
+
         {% else %}
-            <p>
+            <p class="ajustes__vacio">
                 No hay materiales cargados aún
             </p>
         {% endif %}
@@ -107,13 +124,16 @@
             Superficies de la obra
         </h3>
         {% if superficies_cargadas %}
+        <div class="ajustes__lista">
             {% for s in superficies_cargadas %}
-                <p>
+                <p class="ajustes__dato">
                     {{s.superficie}}
                 </p>
             {% endfor %}
+        </div>
+
         {% else %}
-            <p>
+            <p class="ajustes__vacio">
                 No hay superficies cargadas aún
             </p>
         {% endif %}

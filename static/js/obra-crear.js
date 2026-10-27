@@ -67,18 +67,3 @@ if (formularioObra) {
     }
   });
 }
-
-const modalState = document.getElementById("modal-state");
-
-if (modalState) {
-  const modalPresupuesto = document.getElementById("presupuesto__modal");
-  const modalObra = document.getElementById("obra__modal");
-
-  if (modalState.dataset.abrirPresupuesto === "true" && modalPresupuesto) {
-    modalPresupuesto.hidden = false;
-  }
-
-  if (modalState.dataset.abrirObra === "true" && modalObra) {
-    modalObra.hidden = false;
-  }
-}

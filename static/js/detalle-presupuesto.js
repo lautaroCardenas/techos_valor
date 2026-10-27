@@ -1,12 +1,30 @@
 const botones = document.querySelectorAll(".presupuesto__btn");
 
+function abrirModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.hidden = false;
+}
+
 botones.forEach((boton) => {
   boton.addEventListener("click", () => {
-    const modalId = boton.dataset.modal;
-    const modal = document.getElementById(modalId);
+    abrirModal(boton.dataset.modal);
+  });
+});
 
-    if (modal) {
-      modal.hidden = false;
+const tarjetas = document.querySelectorAll(
+  ".presupuestos__mostrar__link[data-modal]",
+);
+
+tarjetas.forEach((tarjeta) => {
+  tarjeta.addEventListener("click", (event) => {
+    if (event.target.closest("button, a")) return;
+    abrirModal(tarjeta.dataset.modal);
+  });
+
+  tarjeta.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      abrirModal(tarjeta.dataset.modal);
     }
   });
 });
@@ -21,4 +39,20 @@ botonesCerrar.forEach((boton) => {
       modal.hidden = true;
     }
   });
+});
+
+const modales = document.querySelectorAll(".presupuesto__modal");
+
+modales.forEach((modal) => {
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) modal.hidden = true;
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    modales.forEach((modal) => {
+      modal.hidden = true;
+    });
+  }
 });

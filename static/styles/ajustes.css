@@ -1,0 +1,122 @@
+.ajustes {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+.ajustes__header {
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ajustes__title {
+  /* font-size: 3rem; */
+  font-weight: 700;
+}
+
+.ajustes__subtitle {
+  margin-top: var(--space-2);
+  /* font-size: 1.5rem; */
+  color: var(--text-muted);
+}
+
+.ajustes__panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.ajustes__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.ajustes__item__titulo {
+  /* font-size: var(--fs-xl); */
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.ajustes__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ajustes__dato {
+  padding: 0.3rem 0.85rem;
+  /* font-size: var(--fs-base); */
+  color: var(--secondary-color);
+  background: #e8f1f8;
+  border-radius: 999px;
+}
+
+.ajustes__vacio {
+  /* font-size: var(--fs-base); */
+  color: var(--text-muted);
+}
+
+.ajustes__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-color);
+}
+
+.ajustes__form p {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.ajustes__form label {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.ajustes__form .helptext {
+  /* font-size: var(--fs-sm); */
+  color: var(--text-muted);
+}
+
+.ajustes__btn {
+  align-self: flex-end;
+  /* padding: 0.7rem 1.5rem; */
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--bg-color);
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.ajustes__btn:hover {
+  background-color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .ajustes {
+    padding: var(--space-3);
+  }
+  .ajustes__panel {
+    grid-template-columns: 1fr;
+  }
+  .ajustes__btn {
+    align-self: stretch;
+  }
+}

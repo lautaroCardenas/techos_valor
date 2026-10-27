@@ -1,57 +1,54 @@
 
-<section class="presupuestonuevo">
-    <h1>Nuevo presupuesto</h1>
+<section class="presupuestonuevo" id="presupuesto__panel">
+    <h2 class="presupuestonuevo__title">Nuevo presupuesto</h1>
 
-    <form method="post" action="{% url 'presupuestos:presupuesto_crear' %}">
+    <form method="post" action="{% url 'presupuestos:presupuesto_crear' %}" class="presupuestonuevo__form">
         {% csrf_token %}
 
         <div class="presupuestonuevo__obra">
-            <button type="button" id="modal__abrir__obra">
+            <button type="button" id="modal__abrir__obra" class="presupuestonuevo__btn__obra">
                 Nueva obra
             </button>
             {{form.obra.label_tag}}
             {{form.obra}}
         </div>
 
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.metro_2.label_tag}}
             {{form.metro_2}}
         </p>
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.precio_metro.label_tag}}
             {{form.precio_metro}}
         </p>
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.material.label_tag}}
             {{form.material}}
         </p>
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.superficie.label_tag}}
             {{form.superficie}}
         </p>
 
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.observacion.label_tag}}
             {{form.observacion}}
         </p>
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.recargo_porcentaje.label_tag}}
             {{form.recargo_porcentaje}}
         </p>
-        <p>
+        <p class="presupuestonuevo__input">
             {{form.descripcion_impresa.label_tag}}
             {{form.descripcion_impresa}}
         </p>
 
-        <button type="submit">Guardar presupuesto</button>
+        <button type="submit" class="presupuestonuevo__btn">Guardar presupuesto</button>
     </form>
 </section>
-<div class="obra__modal" id="obra__modal" hidden>
-    <div class="obra__modal__contentido">
-        <button type="button" id="modal__cerrar__obra">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="#000000" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
-        </button>
-
-        {% include 'obras/obra_crear.html' %}
-    </div>
-</div>
+<section id="obra__panel" hidden>
+    <button type="button" id="modal__volver__presupuesto" class="presupuestonuevo__btn__obra">
+        Volver al presupuesto
+    </button>
+    {% include 'obras/obra_crear.html' %}
+</section>

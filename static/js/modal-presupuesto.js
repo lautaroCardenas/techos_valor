@@ -1,13 +1,21 @@
 const modalPresupuesto = document.getElementById("presupuesto__modal");
 const abrirPresupuesto = document.getElementById("modal__abrir");
 const cerrarPresupuesto = document.getElementById("modal__cerrar");
-
-const modalObra = document.getElementById("obra__modal");
+const panelPresupuesto = document.getElementById("presupuesto__panel");
+const panelObra = document.getElementById("obra__panel");
 const abrirObra = document.getElementById("modal__abrir__obra");
-const cerrarObra = document.getElementById("modal__cerrar__obra");
+const volverPresupuesto = document.getElementById("modal__volver__presupuesto");
+
+function mostrarPanel(panelActivo) {
+  if (!panelPresupuesto || !panelObra) return;
+
+  panelPresupuesto.hidden = panelActivo !== panelPresupuesto;
+  panelObra.hidden = panelActivo !== panelObra;
+}
 
 if (modalPresupuesto && abrirPresupuesto && cerrarPresupuesto) {
   abrirPresupuesto.addEventListener("click", () => {
+    mostrarPanel(panelPresupuesto);
     modalPresupuesto.hidden = false;
   });
 
@@ -22,33 +30,33 @@ if (modalPresupuesto && abrirPresupuesto && cerrarPresupuesto) {
   });
 }
 
-if (modalObra && abrirObra && cerrarObra) {
-  abrirObra.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    modalObra.hidden = false;
+if (abrirObra) {
+  abrirObra.addEventListener("click", () => {
+    mostrarPanel(panelObra);
   });
+}
 
-  cerrarObra.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    modalObra.hidden = true;
+if (volverPresupuesto) {
+  volverPresupuesto.addEventListener("click", () => {
+    mostrarPanel(panelPresupuesto);
   });
+}
 
-  modalObra.addEventListener("click", (event) => {
-    if (event.target === modalObra) {
-      modalObra.hidden = true;
-    }
-  });
+const modalState = document.getElementById("modal-state");
+if (modalState && modalPresupuesto) {
+  const abrirObraInicial = modalState.dataset.abrirObra === "true";
+  const abrirPresupuestoInicial =
+    modalState.dataset.abrirPresupuesto === "true";
+
+  if (abrirObraInicial || abrirPresupuestoInicial) {
+    modalPresupuesto.hidden = false;
+    mostrarPanel(abrirObraInicial ? panelObra : panelPresupuesto);
+  }
 }
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    if (modalObra && !modalObra.hidden) {
-      modalObra.hidden = true;
-    } else if (modalPresupuesto && !modalPresupuesto.hidden) {
+    if (modalPresupuesto && !modalPresupuesto.hidden) {
       modalPresupuesto.hidden = true;
     }
   }
