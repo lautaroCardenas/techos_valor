@@ -1,10 +1,83 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Pagos{% endblock %}
 
 {% block content %}
 <section class="pagos">
-  <h1>Hi from pagos</h1>
+  <div class="pagos__header">
+    <div class="pagos__header__text">
+      <h1 class="pagos__title">
+        Pagos
+      </h1>
+      <p class="pagos__subtitle">
+        Registro de todos los pagos realizados por obras.
+      </p>
+    </div>
+  </div>
+  <div class="pagos__buscar">
+    <form action="" method="get" class="pagos__form">
+      <div class="pagos__opciones">
+        <input type="text" class="pagos__input" name="search_input" value="{{search_input}}" placeholder="Buscar pagos por nombre y apellido del cliente...">
+      </div>
+      <div class="presupuestos__filtros">
+        <label for="" class="pagos__negocio">
+          <input type="checkbox" class="pagos__negocio__input" {% if negocio_filter %}checked{% endif %}>
+          Negocio
+        </label>
+      </div>
+      <button class="pagos__btn">
+        Buscar
+      </button>
+    </form>
+  </div>
+  <div class="pagos__panel">
+    {% if presupuestos %}
+      {% for p in presupuestos %}
+        <div class="pagos__obra">
+          <a href="{% url 'pagos:pago_detalle' p.obra.pk %}" class="pagos__obra__link">
+            <div class="pagos__obra__data">
+              <h3 class="obra__data__titulo">
+                {{p.obra.cliente.nombre}} {{p.obra.cliente.apellido}}
+              </h3>
+              <p class="obra__data__subtitulo">
+                {{p.obra.direccion}}
+              </p>
+              <p>
+                Monto: $ {{p.monto}}
+              </p>
+              <p>
+                Resto: ${{p.resto_calculado}}
+              </p>
+            </div>
+          </a>
+          <button
+            type="button"
+            class="pagos__btn__agregar js-agregar-pago"
+            data-presupuesto-id="{{ p.pk }}"
+            data-presupuesto-monto="{{ p.monto }}"
+          >
+            Agregar pago
+        </button>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="pagos__no">No hay obras cargadas aún</p>
+    {% endif %}
+  </div>
+  <dialog id="pago-modal" class="pago-modal">
+    <button
+        type="button"
+        id="pago-modal-cerrar"
+        class="pago-modal__cerrar"
+    >
+        Cerrar
+    </button>
+
+    {% include 'pagos/pago_crear.html' %}
+  </dialog>
 </section>
 {% endblock %}
-    
+{% block extra_js %}
+<script src="{% static 'js/pago-crear.js' %}" defer></script>
+{% endblock %}

@@ -9,7 +9,7 @@
     <link
       rel="icon"
       type="image/png"
-      href="{% static 'images/techos_valor_logo.png' %}"
+      href="{% static 'images/roof.png' %}"
     />
     <title>Techos Valor | {% block title %}{% endblock %}</title>
   </head>
@@ -50,5 +50,6 @@
   <script src="{% static 'js/modal-presupuesto.js' %}"></script>
   <script src="{% static 'js/detalle-presupuesto.js' %}"></script>
   <script src="{% static 'js/obra-crear.js' %}"></script>
+  {% block extra_js %}{% endblock %}
   </body>
 </html>

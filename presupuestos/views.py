@@ -75,7 +75,7 @@ def presupuesto_crear(request):
 
             if form.is_valid():
                 form.save()
-                return redirect('presupuestos:presupuestos.html')
+                return redirect('presupuestos:presupuestos_total')
         else:
             form = PresupuestoForm()
         return render(request, 'presupuestos/presupuesto_crear.html', {'form': form, 'obra_form': obra_form})

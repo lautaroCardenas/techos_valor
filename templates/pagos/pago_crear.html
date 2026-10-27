@@ -1,0 +1,24 @@
+<section class="pagonuevo">
+    <h2 class="pagonuevo__titulo">
+        Nuevo pago
+    </h2>
+
+    <form action="{% url 'pagos:pago_crear' %}"
+          method="post"
+          class="pagonuevo__form">
+
+        {% csrf_token %}
+
+        <input
+            type="hidden"
+            name="presupuesto_id"
+            id="pago-presupuesto-id"
+        >
+
+        {{ form_pago.as_p }}
+
+        <button type="submit" class="pagonuevo__btn">
+            Agregar pago
+        </button>
+    </form>
+</section>

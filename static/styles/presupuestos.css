@@ -340,6 +340,15 @@
   gap: var(--space-1);
   margin: 0;
 }
+
+.presupuestonuevo__input__aceptado {
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: var(--space-2);
+}
 .presupuestonuevo__input textarea {
   min-height: 90px;
   resize: vertical;

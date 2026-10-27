@@ -1,3 +1,79 @@
-<h1>
-    un pago
-</h1>
+{% extends 'base.html' %}
+
+{% block title %}Detalle de pagos{% endblock %}
+
+{% block content %}
+<section class="pagodetalle">
+    <div class="pagodetalle__header">
+        <h2 class="pagodetalle__titulo">
+            Detalle de pagos
+        </h2>
+        <p class="pagodetalle__subtitulo">
+            Información de la obra y su historial de pagos.
+        </p>
+    </div>
+    <div class="pagodetalle__obra">
+        <h2 class="pagodetalle__obra__titulo">
+            Datos de la obra
+        </h2>
+        <p class="pagodetalle__obra__subtitulo">
+            {{obra.cliente.nombre}} {{obra.cliente.apellido}}
+        </p>
+        {% if obra.negocio %} 
+            <p class="pagodetalle__obra__negocio">Negocio</p>
+        {% else %}
+            <p class="pagodetalle__obra__particular">Particular</p>
+        {% endif %}
+        {% if presupuesto %}
+            <p class="pagodetalle__item__titulo">
+                Superficie: {{presupuesto.superficie}}
+            </p>
+            <p class="pagodetalle__item__titulo">
+                Material: {{presupuesto.material}}
+            </p>
+            <p class="pagodetalle__item__titulo">
+                Metro 2: {{presupuesto.metro_2}}
+            </p>
+            <p class="pagodetalle__item__titulo">
+                Precio por metro: {{presupuesto.precio_metro}}
+            </p>
+            <p class="pagodetalle__item__titulo">
+                Recargo: {{presupuesto.recargo_porcentaje}}%
+            </p>
+            <p class="pagodetalle__item__titulo">
+                Observacion: {{presupuesto.observacion}}
+            </p>
+            <p class="pagodetalle__item__titulo">
+                Monto {{presupuesto.monto}}
+            </p>
+        {% endif %}
+    </div>
+    <div class="pagodetalle__historial">
+        {% if pagos %}
+            {% for p in pagos %}
+                <h3>
+                    Pago N° {{p.numero}}
+                </h3>
+                <p>
+                    Monto pagado: ${{p.monto_pagado}}
+                </p>
+                <p>
+                    Restro: ${{p.resto}}
+                </p>
+                {% if obra.negocio %}
+                    <p> 
+                        Comision: {{p.comision_porcentaje}}%
+                    </p>
+                    <p>
+                        Monto de comisión: {{p.comision_monto}}
+                    </p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>
+                Esta obra no tiene un presupuesto aceptado aún.
+            </p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
