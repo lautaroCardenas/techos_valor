@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Obra
+from .models import Obra, FechaVisita
 from django.db.models import Q
 from .forms import ObraForm, ClienteForm
 from presupuestos.models import Presupuesto
@@ -36,7 +36,7 @@ def obra_crear(request):
             form = ObraForm(request.POST)
 
             if form.is_valid():
-                obra = form.save()
+                obra = guardar_obra_con_fecha(form)
                 campos_presupuesto = [
                     "metro_2",
                     "precio_metro",
@@ -142,3 +142,27 @@ def obra_actualizar(request, pk):
         'abrir_modal_cliente': False,
         'es_edicion': True,
     })
+
+
+def guardar_obra_con_fecha(form):
+    obra = form.save(commit=False)
+
+    fecha = form.cleaned_data.get('fecha_visita')
+
+    if fecha:
+        ultima_fecha = FechaVisita.objects.order_by('-numero').first()
+        nuevo_numero = ultima_fecha.numero + 1 if ultima_fecha else 1
+
+        fecha_visita = FechaVisita.objects.create(
+            numero=nuevo_numero,
+            fecha=fecha
+        )
+
+        obra.fecha_visita = fecha_visita
+    else:
+        obra.fecha_visita = None
+
+    obra.save()
+    form.save_m2m()
+
+    return obra
