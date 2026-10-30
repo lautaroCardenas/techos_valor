@@ -32,7 +32,7 @@ def login(request):
 
     form = LoginForm(request, data=request.POST or None)
     if request.method == "POST" and form.is_valid():
-        auth_login(request, form.usuario)  # genera un id de sesión nuevo
+        auth_login(request, form.usuario_autenticado)  # genera un id de sesión nuevo
         return redirect(_destino_seguro(request))
 
     return render(request, "login/login.html", {

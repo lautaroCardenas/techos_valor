@@ -5,7 +5,7 @@
 {% block content %}
 <section class="login">
   <h1>Techos Valor</h1>
-  <p>Ingresá con tu email y contraseña.</p>
+  <p>Ingresá con tu email o usuario y tu contraseña.</p>
 
   <form method="post" action="{% url 'login:login' %}" novalidate>
     {% csrf_token %}
@@ -18,9 +18,9 @@
     {% endif %}
 
     <div class="field">
-      <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-      {{ form.email }}
-      {% for error in form.email.errors %}<small class="error">{{ error }}</small>{% endfor %}
+      <label for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
+      {{ form.usuario }}
+      {% for error in form.usuario.errors %}<small class="error">{{ error }}</small>{% endfor %}
     </div>
 
     <div class="field">

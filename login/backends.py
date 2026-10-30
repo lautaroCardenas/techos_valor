@@ -1,23 +1,26 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
 
 from .models import EmailPermitido
 
 
 class EmailBackend(ModelBackend):
-    """Ingreso con email + contraseña. Salvo los superusuarios, el email
-    tiene que seguir habilitado en EmailPermitido."""
+    """Ingreso con email o nombre de usuario + contraseña. Salvo los
+    superusuarios, el email tiene que seguir habilitado en EmailPermitido."""
 
-    def authenticate(self, request, email=None, password=None, **kwargs):
-        if not email or not password:
+    def authenticate(self, request, identificador=None, password=None, **kwargs):
+        if not identificador or not password:
             return None
+        identificador = identificador.strip()
         Usuario = get_user_model()
-        try:
-            usuario = Usuario.objects.get(email__iexact=email.strip())
-        except Usuario.DoesNotExist:
-            # Hashea igual para que el tiempo de respuesta no delate si el email existe.
+        candidatos = list(Usuario.objects.filter(
+            Q(email__iexact=identificador) | Q(username__iexact=identificador))[:2])
+        if len(candidatos) != 1:
+            # Hashea igual para que el tiempo de respuesta no delate si el usuario existe.
             Usuario().set_password(password)
             return None
+        usuario = candidatos[0]
         if usuario.check_password(password) and self.user_can_authenticate(usuario):
             return usuario
         return None

@@ -2,4 +2,9 @@
     <h1>
         Hi from obras
     </h1>
+
+    <form method="post" action="{% url 'login:logout' %}">
+        {% csrf_token %}
+        <button type="submit">Cerrar sesión</button>
+    </form>
 </section>

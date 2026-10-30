@@ -10,39 +10,40 @@ BLOQUEO_SEGUNDOS = getattr(settings, "LOGIN_BLOQUEO_SEGUNDOS", 15 * 60)
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(
-        label="Email", max_length=254,
-        widget=forms.EmailInput(attrs={"autocomplete": "email", "autofocus": True}))
+    usuario = forms.CharField(
+        label="Email o usuario", max_length=254,
+        widget=forms.TextInput(attrs={"autocomplete": "username", "autofocus": True}))
     password = forms.CharField(
         label="Contraseña", strip=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}))
 
-    error_credenciales = "Email o contraseña incorrectos."
+    error_credenciales = "El usuario o la contraseña son incorrectos."
     error_bloqueo = "Demasiados intentos fallidos. Probá de nuevo en unos minutos."
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
-        self.usuario = None
+        self.usuario_autenticado = None
         super().__init__(*args, **kwargs)
 
-    def _clave_intentos(self, email):
+    def _clave_intentos(self, identificador):
         ip = self.request.META.get("REMOTE_ADDR", "")
-        return f"login-intentos:{ip}:{email.lower()}"
+        return f"login-intentos:{ip}:{identificador.strip().lower()}"
 
     def clean(self):
-        email = self.cleaned_data.get("email")
+        identificador = self.cleaned_data.get("usuario")
         password = self.cleaned_data.get("password")
-        if not email or not password:
+        if not identificador or not password:
             return self.cleaned_data
 
-        clave = self._clave_intentos(email)
+        clave = self._clave_intentos(identificador)
         if cache.get(clave, 0) >= MAX_INTENTOS:
             raise forms.ValidationError(self.error_bloqueo, code="bloqueado")
 
-        self.usuario = authenticate(self.request, email=email, password=password)
-        if self.usuario is None:
+        self.usuario_autenticado = authenticate(
+            self.request, identificador=identificador, password=password)
+        if self.usuario_autenticado is None:
             cache.set(clave, cache.get(clave, 0) + 1, BLOQUEO_SEGUNDOS)
-            # Mensaje genérico: no revela si el email existe o está habilitado.
+            # Mensaje genérico: no revela si el usuario existe o está habilitado.
             raise forms.ValidationError(self.error_credenciales, code="credenciales")
 
         cache.delete(clave)
