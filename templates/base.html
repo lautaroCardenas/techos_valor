@@ -1,39 +1,57 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Techos Valor{% endblock %}</title>
-  {% block head %}{% endblock %}
-</head>
-<body>
-  {% if user.is_authenticated %}
-  <header class="topbar">
-    <a href="{% url 'obras:obras_total' %}" class="brand">Techos Valor</a>
-    <nav>
-      <a href="{% url 'obras:obras_total' %}">Obras</a>
-      <a href="{% url 'presupuestos:presupuestos_total' %}">Presupuestos</a>
-      <a href="{% url 'pagos:pagos_total' %}">Pagos</a>
-      <a href="{% url 'ajustes:ajustes' %}">Ajustes</a>
-    </nav>
-    <form method="post" action="{% url 'login:logout' %}" class="logout">
-      {% csrf_token %}
-      <span>{{ user }}</span>
-      <button type="submit">Cerrar sesión</button>
-    </form>
-  </header>
-  {% endif %}
-
-  <main>
-    {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li class="message message-{{ message.tags }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% block content %}{% endblock %}
-  </main>
-</body>
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'styles/global.css' %}">
+    {% block extra_css %}{% endblock %}
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'images/roof.png' %}"
+    />
+    <title>Techos Valor | {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <header class="header">
+      {% block navbar %}
+      <nav class="navbar">
+        <div class="navbar__home">
+          <a href="{% url 'ajustes:ajustes' %}">
+            <img
+              class="navbar__logo"
+              src="{% static 'images/techos_valor_logo.png' %}"
+              alt="brands logo"
+            />
+          </a>
+        </div>
+        <ul class="navbar__links">
+          <li>
+            <a
+              href="{% url 'presupuestos:presupuestos_total' %}"
+              class="navbar__link"
+              >Presupuestos</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'obras:obras_total' %}" class="navbar__link"
+              >Obras</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'pagos:pagos_total' %}" class="navbar__link"
+              >Pagos</a
+            >
+          </li>
+        </ul>
+      </nav>
+      {% endblock %}
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+  <script src="{% static 'js/modal-presupuesto.js' %}"></script>
+  <script src="{% static 'js/detalle-presupuesto.js' %}?v=2"></script>
+  <script src="{% static 'js/obra-crear.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+  </body>
 </html>

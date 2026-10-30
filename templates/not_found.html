@@ -1,3 +1,33 @@
-<h1>
-    Not found :{D
-</h1>
+{% extends 'base.html' %} 
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/not-found.css' %}">
+{% endblock %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<section class="notfound">
+  <div class="notfound__main">
+    <img src="{% static 'images/not-found.png' %}" alt="Not found animation">
+    <h1 class="notfound__titulo">
+        Error 404
+    </h1>
+    <p class="notfound__subtitulo">
+        No se encontró la página solicitada
+    </p>
+    <p class="notfound__text">
+        Podes ir a alguna de las siguientes secciones de la página
+    </p>
+  </div>
+  <div class="notfound__options">
+    <a href="{% url 'presupuestos:presupuestos_total' %}">
+        Presupuestos
+    </a>
+    <a href="{% url 'obras:obras_total' %}">Obras</a>
+    <a href="{% url 'pagos:pagos_total' %}">Pagos</a>
+  </div>
+</section>
+{% endblock %}

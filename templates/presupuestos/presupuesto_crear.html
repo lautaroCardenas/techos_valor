@@ -1,0 +1,58 @@
+
+<section class="presupuestonuevo" id="presupuesto__panel">
+    <h2 class="presupuestonuevo__title">Nuevo presupuesto</h1>
+
+    <form method="post" action="{% url 'presupuestos:presupuesto_crear' %}" class="presupuestonuevo__form">
+        {% csrf_token %}
+
+        <div class="presupuestonuevo__obra">
+            <button type="button" id="modal__abrir__obra" class="presupuestonuevo__btn__obra">
+                Nueva obra
+            </button>
+            {{form.obra.label_tag}}
+            {{form.obra}}
+        </div>
+
+        <p class="presupuestonuevo__input">
+            {{form.metro_2.label_tag}}
+            {{form.metro_2}}
+        </p>
+        <p class="presupuestonuevo__input">
+            {{form.precio_metro.label_tag}}
+            {{form.precio_metro}}
+        </p>
+        <p class="presupuestonuevo__input">
+            {{form.material.label_tag}}
+            {{form.material}}
+        </p>
+        <p class="presupuestonuevo__input">
+            {{form.superficie.label_tag}}
+            {{form.superficie}}
+        </p>
+
+        <p class="presupuestonuevo__input">
+            {{form.observacion.label_tag}}
+            {{form.observacion}}
+        </p>
+        <p class="presupuestonuevo__input">
+            {{form.recargo_porcentaje.label_tag}}
+            {{form.recargo_porcentaje}}
+        </p>
+        <p class="presupuestonuevo__input">
+            {{form.descripcion_impresa.label_tag}}
+            {{form.descripcion_impresa}}
+        </p>
+        <p class="presupuestonuevo__input presupuestonuevo__input__aceptado">
+            {{form.aceptado.label_tag}}
+            {{form.aceptado}} 
+        </p>
+
+        <button type="submit" class="presupuestonuevo__btn">Guardar presupuesto</button>
+    </form>
+</section>
+<section id="obra__panel" hidden>
+    <button type="button" id="modal__volver__presupuesto" class="presupuestonuevo__btn__obra">
+        Volver al presupuesto
+    </button>
+    {% include 'obras/obra_crear.html' %}
+</section>

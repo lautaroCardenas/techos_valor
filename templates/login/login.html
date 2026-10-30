@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Ingresar | Techos Valor{% endblock %}
+{% block title %}Ingresar{% endblock %}
+
+{# Sin sesión no tiene sentido mostrar el menú. #}
+{% block navbar %}{% endblock %}
 
 {% block content %}
 <section class="login">
   <h1>Techos Valor</h1>
   <p>Ingresá con tu email o usuario y tu contraseña.</p>
+
+  {% for message in messages %}
+  <p class="message message-{{ message.tags }}">{{ message }}</p>
+  {% endfor %}
 
   <form method="post" action="{% url 'login:login' %}" novalidate>
     {% csrf_token %}
