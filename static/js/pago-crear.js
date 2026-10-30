@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.close();
   });
 
+  if (modal.dataset.open === "true") {
+    modal.showModal();
+  }
+
   modal.addEventListener("click", (event) => {
     if (event.target === modal) {
       modal.close();

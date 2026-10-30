@@ -8,9 +8,9 @@ from django.db.models.functions import Coalesce
 
 # Create your views here.
 def pagos_total(request):
-    form_pago = PagosForm()
+    # form_pago = PagosForm()
     pagos = Pagos.objects.all().order_by('presupuesto')
-    obras = Obra.objects.all()
+    # obras = Obra.objects.all()
 
     pagos = pagos.filter(
         presupuesto__aceptado=True
@@ -19,18 +19,7 @@ def pagos_total(request):
     search_input = request.GET.get('search_input', '').strip()
     negocio_filter = request.GET.get('filter', '').strip()
 
-    presupuestos = (Presupuesto.objects.filter(aceptado=True)
-                    .select_related('obra', 'obra__cliente')
-                    .annotate(
-                        total_pagado=Coalesce(
-                            Sum('pagos__monto_pagado'),
-                            Value(0),
-                            output_field=DecimalField(max_digits=100, decimal_places=3)
-                        )
-                    )
-                    .annotate(resto_calculado=F('monto') - F('total_pagado'))
-                    .order_by('obra')
-                    )
+    presupuestos = Presupuesto.objects.filter(aceptado=True)
 
     if (search_input):
         pagos = pagos.filter(
@@ -39,17 +28,26 @@ def pagos_total(request):
         )
 
     if negocio_filter:
-        obras = obras.filter(
-            negocio=True
+        presupuestos = presupuestos.filter(
+            aceptado=True
         )
 
-    obras = obras.filter(
-        presupuesto__aceptado=True
-    ).distinct()
+    # obras = obras.filter(
+    #     presupuesto__aceptado=True
+    # ).distinct()
     # obras = obras.distinct()
-    presupuestos = presupuestos.distinct().order_by('obra')
+    presupuestos = Presupuesto.objects.filter(
+        aceptado=True
+    ).select_related('obra__cliente').order_by('obra')
 
-    return render(request, 'pagos/pagos.html', {'pagos': pagos, 'presupuestos': presupuestos, 'search_input': search_input, 'negocio_filter': negocio_filter, 'obras': obras, 'form_pago': form_pago})
+    for p in presupuestos:
+        ultimo_pago = Pagos.objects.filter(
+            presupuesto=p
+        ).last()
+
+        p.resto_actual = ultimo_pago.resto if ultimo_pago else p.monto
+
+    return render(request, 'pagos/pagos.html', {'pagos': pagos, 'presupuestos': presupuestos, 'search_input': search_input, 'negocio_filter': negocio_filter})
 
 def pago_detalle(request, pk):
     try:
@@ -61,7 +59,9 @@ def pago_detalle(request, pk):
             obra = obra, aceptado=True
         ).order_by('-fecha_actual').first()
 
-        pagos = Pagos.objects.none()
+        # pagos = Pagos.objects.none()
+        pagos = Pagos.objects.all()
+        form_pago = PagosForm(presupuesto=presupuesto)
 
         if presupuesto:
             pagos = Pagos.objects.filter(
@@ -69,23 +69,41 @@ def pago_detalle(request, pk):
             ).order_by('numero')
 
         
-        return render(request, 'pagos/pago_detalle.html', {'pagos':pagos, 'obra': obra, 'presupuesto': presupuesto})
+        return render(request, 'pagos/pago_detalle.html', {
+            'pagos': pagos,
+            'obra': obra,
+            'presupuesto': presupuesto,
+            'form_pago': form_pago,
+        })
     except:
         return render(request, 'not_found.html')
 
 
 def pago_crear(request):
     if request.method == 'POST':
-        form_pago = PagosForm(request.POST)
         presupuesto = get_object_or_404(
             Presupuesto,
             pk=request.POST.get('presupuesto_id'),
             aceptado=True,
         )
+        form_pago = PagosForm(request.POST, presupuesto=presupuesto)
         form_pago.instance.presupuesto = presupuesto
+        
         if form_pago.is_valid():
             form_pago.save()
-        return redirect('pagos:pagos_total')
+            return redirect('pagos:pago_detalle', pk=presupuesto.obra_id)
+
+        obra = presupuesto.obra
+        pagos = Pagos.objects.filter(
+            presupuesto=presupuesto
+        ).order_by('numero')
+        return render(request, 'pagos/pago_detalle.html', {
+            'pagos': pagos,
+            'obra': obra,
+            'presupuesto': presupuesto,
+            'form_pago': form_pago,
+            'abrir_modal_pago': True,
+        })
 
     return render(request, 'pagos/pago_crear.html', {'form_pago': PagosForm()})
     
