@@ -15,6 +15,7 @@
   </head>
   <body>
     <header class="header">
+      {% block navbar %}
       <nav class="navbar">
         <div class="navbar__home">
           <a href="{% url 'ajustes:ajustes' %}">
@@ -45,6 +46,7 @@
           </li>
         </ul>
       </nav>
+      {% endblock %}
     </header>
     <main>{% block content %}{% endblock %}</main>
   <script src="{% static 'js/modal-presupuesto.js' %}"></script>
