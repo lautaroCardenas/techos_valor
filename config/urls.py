@@ -27,5 +27,5 @@ urlpatterns = [
     path('presupuestos/', include('presupuestos.urls', namespace="presupuestos")),
     path('pagos/', include('pagos.urls', namespace="pagos")),
     path('ajustes/', include('ajustes.urls', namespace="ajustes")),
-    re_path(r'^.*$', not_found),
+    # re_path(r'^.*$', not_found),
 ]

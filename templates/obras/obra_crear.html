@@ -4,24 +4,26 @@
 {% endblock %}
 
 <section class="obranueva">
-    <h2 class="obranueva__title">Nueva obra</h2>
+    <h2 class="obranueva__title">{% if es_edicion %}Editar obra{% else %}Nueva obra{% endif %}</h2>
 
     <form
         method="post"
-        action="{% url 'obras:obra_crear' %}"
+        action="{% if es_edicion %}{% url 'obras:obra_actualizar' obra.pk %}{% else %}{% url 'obras:obra_crear' %}{% endif %}"
         id="obra__form"
         class="obranueva__form"
     >
         {% csrf_token %}
-        <input type="hidden" name="origen" value="obra_crear">
+        {% if not es_edicion %}<input type="hidden" name="origen" value="obra_crear">{% endif %}
 
         <div class="obranueva__cliente">
             {{ obra_form.cliente.label_tag }}
             {{ obra_form.cliente }}
 
+            {% if not es_edicion %}
             <button type="button" id="modal__abrir__cliente" class="obranueva__btn__cliente">
                 Nuevo cliente
             </button>
+            {% endif %}
         </div>
 
         <div class="obranueva__campo">{{ obra_form.direccion.as_field_group }}</div>
@@ -33,8 +35,10 @@
         <div class="obranueva__campo">{{ obra_form.proxima_accion.as_field_group }}</div>
         <div class="obranueva__campo">{{ obra_form.fecha_visita.as_field_group }}</div>
 
-        <button type="submit" class="obranueva__btn">Guardar obra</button>
+        <button type="submit" class="obranueva__btn">{% if es_edicion %}Guardar cambios{% else %}Guardar obra{% endif %}</button>
     </form>
 </section>
 
+    {% if not es_edicion %}
 {% include 'obras/cliente_crear.html' %}
+    {% endif %}

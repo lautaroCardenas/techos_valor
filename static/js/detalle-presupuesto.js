@@ -1,4 +1,6 @@
-const botones = document.querySelectorAll(".presupuesto__btn");
+const botones = document.querySelectorAll(
+  ".presupuesto__btn, .obradetalle__presupuesto__btn",
+);
 
 function abrirModal(modalId) {
   const modal = document.getElementById(modalId);

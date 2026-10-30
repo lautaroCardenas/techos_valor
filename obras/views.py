@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Obra
 from django.db.models import Q
 from .forms import ObraForm, ClienteForm
+from presupuestos.models import Presupuesto
 
 # Create your views here.
 def obras_total(request):
@@ -20,7 +21,11 @@ def obras_total(request):
 def obra_detalle(request, pk):
     try:
         obra = Obra.objects.get(pk=pk)
-        return render(request, 'obras/obra_detalle.html', {'obra': obra})
+        presupuestos = Presupuesto.objects.filter(
+            obra = obra
+        ).order_by('fecha_actual')
+
+        return render(request, 'obras/obra_detalle.html', {'obra': obra, 'presupuestos':presupuestos})
     except: # Si no encuentra la obra con el id ingresado como parámetro, retorna un template de not found.
         return render(request, 'not_found.html')
 
@@ -121,3 +126,19 @@ def cliente_crear(request):
         })
     except:
         return render(request, 'not_found.html')
+
+def obra_actualizar(request, pk):
+    obra = get_object_or_404(Obra, pk=pk)
+    form = ObraForm(request.POST or None, instance=obra)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('obras:obra_detalle', pk=obra.pk)
+
+    return render(request, 'obras/obra_crear.html', {
+        'obra': obra,
+        'obra_form': form,
+        'cliente_form': ClienteForm(),
+        'abrir_modal_cliente': False,
+        'es_edicion': True,
+    })

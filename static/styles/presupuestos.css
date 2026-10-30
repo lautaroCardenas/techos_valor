@@ -87,6 +87,7 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
+  box-shadow: var(--shadow-card);
   transition: background-color 0.15s ease;
 }
 .presupuestos__btn:hover,
@@ -222,23 +223,36 @@
 
 .presupuesto__btn,
 .presupuestonuevo__btn__obra {
-  padding: 0.45rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.6rem 1.25rem;
   font-family: inherit;
-  font-weight: 500;
   font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-lg);
   color: var(--primary-color);
   background: transparent;
   border: 1.5px solid var(--primary-color);
-  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  transition: all 0.2s ease;
 }
+
 .presupuesto__btn:hover,
 .presupuestonuevo__btn__obra:hover {
   color: #fff;
-  background: var(--primary-color);
+  background-color: var(--primary-color);
+}
+
+.presupuesto__btn svg path {
+  fill: currentColor;
+}
+
+.presupuesto__btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
 }
 
 .obras__acciones__editar,
@@ -366,6 +380,10 @@
   justify-content: center;
   padding: var(--space-3);
   background: rgba(17, 17, 17, 0.6);
+}
+
+.presupuesto__modal[hidden] {
+  display: none;
 }
 
 .presupuesto__modal__contenido {
