@@ -3,6 +3,8 @@ from .views import obras_total, obra_detalle, obra_crear, cliente_crear, obra_ac
 
 app_name = 'obras'
 
+app_name = 'obras'
+
 urlpatterns = [
     path('', obras_total, name="obras_total"),
     path('crear/', obra_crear, name="obra_crear"),
