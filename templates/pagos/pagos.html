@@ -1,3 +1,77 @@
-<h1>
-    Hi from pagos
-</h1>
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/pagos.css' %}">
+{% endblock %}
+{% block title %}Pagos{% endblock %}
+
+{% block content %}
+<section class="pagos">
+  <div class="pagos__header">
+    <h1 class="pagos__title">
+      Pagos
+    </h1>
+    <p class="pagos__subtitle">
+      Registro de todos los pagos realizados por obras.
+    </p>
+  </div>
+
+  <div class="pagos__buscar">
+    <form action="" method="get" class="pagos__form">
+      <input type="text" class="pagos__input" name="search_input" value="{{ search_input }}" placeholder="Buscar pagos por nombre y apellido del cliente...">
+      <label class="pagos__negocio">
+        <input type="checkbox" class="pagos__negocio__input" name="negocio" {% if negocio_filter %}checked{% endif %}>
+        Negocio
+      </label>
+      <button class="pagos__btn">
+        <svg class="pagos__btn__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0m18 11l-6-6"/></svg>
+        Buscar
+      </button>
+    </form>
+  </div>
+
+  <div class="pagos__panel">
+    {% if presupuestos %}
+      {% for p in presupuestos %}
+        <a href="{% url 'pagos:pago_detalle' p.obra.pk %}" class="pagos__obra__link">
+          <div class="pagos__obra">
+            <div class="pagos__obra__header">
+              <h3 class="pagos__obra__titulo">
+                {{ p.obra.cliente.nombre }} {{ p.obra.cliente.apellido }}
+              </h3>
+              {% if p.obra.negocio %}
+                <p class="pagos__obra__negocio">Negocio</p>
+              {% else %}
+                <p class="pagos__obra__particular">Particular</p>
+              {% endif %}
+            </div>
+            <p class="pagos__obra__direccion">
+              {{ p.obra.direccion }} | {{p.obra.zona.localidad}}
+            </p>
+            <div class="pagos__obra__montos">
+              <div class="pagos__obra__monto">
+                <p class="pagos__obra__label">Monto</p>
+                <p class="pagos__obra__valor">${{ p.monto|floatformat:2 }}</p>
+              </div>
+              {% if pagos %}
+                <div class="pagos__obra__monto">
+                  <p class="pagos__obra__label">Resto</p>
+                  <p class="pagos__obra__valor valor__resto">${{ p.resto_actual|floatformat:2 }}</p>
+                  
+                </div>
+              {% else %}
+                <p class="pagos__obra__vacio">Aún no hay pagos registrados</p>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <p class="pagos__no">No hay obras cargadas aún</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/pago-crear.js' %}" defer></script>
+{% endblock %}

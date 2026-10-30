@@ -1,3 +1,137 @@
-<h1>
-    Presupuesto {{pk}}
-</h1>
+<div
+    class="presupuesto__modal"
+    id="presupuesto-modal-{{ presupuesto.pk }}"
+    hidden
+>
+    <div class="presupuesto__modal__contenido">
+
+        <button type="button" class="presupuesto__modal__cerrar">
+            &times;
+        </button>
+
+        <h2 class="presupuesto__titulo">
+            Presupuesto {{ forloop.counter }}
+        </h2>
+
+        <header class="presupuesto__cabecera">
+            <div class="presupuesto__cliente">
+                <span class="presupuesto__eyebrow">Cliente</span>
+                <h3 class="presupuesto__nombre">
+                    {{ presupuesto.obra.cliente.nombre }}
+                    {{ presupuesto.obra.cliente.apellido }}
+                </h3>
+                <p class="presupuesto__texto">
+                    {{ presupuesto.obra.direccion }}, {{ presupuesto.obra.zona.localidad }}
+                </p>
+                <p class="presupuesto__texto">
+                    Tel: {{ presupuesto.obra.cliente.telefono }}
+                </p>
+            </div>
+
+            <div class="presupuesto__meta">
+                <p class="presupuesto__fecha">Fecha: {{ presupuesto.fecha_actual }}</p>
+                {% if presupuesto.aceptado %}
+                    <p class="presupuesto__dato__aceptado">Aceptado</p>
+                {% else %}
+                    <p class="presupuesto__dato__noaceptado">No aceptado</p>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="presupuesto__resumen">
+            <div class="presupuesto__tarjeta">
+                <span class="presupuesto__tarjeta__label">Superficie</span>
+                <strong class="presupuesto__tarjeta__valor">{{ presupuesto.superficie.superficie }}</strong>
+            </div>
+            <div class="presupuesto__tarjeta">
+                <span class="presupuesto__tarjeta__label">Metros cuadrados</span>
+                <strong class="presupuesto__tarjeta__valor">{{ presupuesto.metro_2 }} m²</strong>
+            </div>
+            <div class="presupuesto__tarjeta">
+                <span class="presupuesto__tarjeta__label">Recargo</span>
+                <strong class="presupuesto__tarjeta__valor">{{ presupuesto.recargo_porcentaje }}%</strong>
+            </div>
+        </div>
+
+        <section class="presupuesto__seccion">
+            <h4 class="presupuesto__subtitulo">Descripción del trabajo</h4>
+            <p class="presupuesto__parrafo">{{ presupuesto.descripcion_impresa }}</p>
+        </section>
+
+        <section class="presupuesto__seccion">
+            <h4 class="presupuesto__subtitulo">Observación</h4>
+            <p class="presupuesto__parrafo">{{ presupuesto.observacion }}</p>
+        </section>
+
+        <section class="presupuesto__seccion">
+            <h4 class="presupuesto__subtitulo">Detalle de materiales</h4>
+            <div class="presupuesto__tabla__contenedor">
+                <table class="presupuesto__tabla">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th class="presupuesto__tabla__num">Precio por M²</th>
+                            <th class="presupuesto__tabla__num">M²</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ presupuesto.material.material }}</td>
+                            <td class="presupuesto__tabla__num">{{ presupuesto.precio_metro }}</td>
+                            <td class="presupuesto__tabla__num">{{ presupuesto.metro_2 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="presupuesto__total">
+            <span class="presupuesto__total__label">Total del presupuesto</span>
+            <strong class="presupuesto__total__monto">{{ presupuesto.monto }}</strong>
+        </div>
+
+        <section class="presupuesto__seccion">
+            <h4 class="presupuesto__subtitulo">Datos de la obra</h4>
+            <dl class="presupuesto__obra">
+                <div class="presupuesto__obra__item">
+                    <dt>Fecha de contacto</dt>
+                    <dd>{{ presupuesto.obra.fecha_contacto|date:"d/m/Y" }}</dd>
+                </div>
+                <div class="presupuesto__obra__item">
+                    <dt>Estado</dt>
+                    <dd>{{ presupuesto.obra.estado|default:"Sin estado" }}</dd>
+                </div>
+                <div class="presupuesto__obra__item">
+                    <dt>Próxima acción</dt>
+                    <dd>{{ presupuesto.obra.proxima_accion|default:"Sin acción programada" }}</dd>
+                </div>
+                <div class="presupuesto__obra__item">
+                    <dt>Fecha de visita</dt>
+                    <dd>
+                        {% if presupuesto.obra.fecha_visita %}
+                            {{ presupuesto.obra.fecha_visita.fecha|date:"d/m/Y" }}
+                            {% if presupuesto.obra.fecha_visita.numero %}
+                                (visita {{ presupuesto.obra.fecha_visita.numero }})
+                            {% endif %}
+                        {% else %}
+                            Sin visita programada
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="presupuesto__obra__item">
+                    <dt>Negocio</dt>
+                    <dd>{% if presupuesto.obra.negocio %}Sí{% else %}No{% endif %}</dd>
+                </div>
+                <div class="presupuesto__obra__item">
+                    <dt>Garantía</dt>
+                    <dd>{% if presupuesto.obra.garantia %}Sí{% else %}No{% endif %}</dd>
+                </div>
+                <div class="presupuesto__obra__item presupuesto__obra__item--completo">
+                    <dt>Observaciones de la obra</dt>
+                    <dd>{{ presupuesto.obra.observacion|default:"Sin observaciones" }}</dd>
+                </div>
+            </dl>
+        </section>
+
+    </div>
+</div>

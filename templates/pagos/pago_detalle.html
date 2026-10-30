@@ -1,3 +1,159 @@
-<h1>
-    un pago
-</h1>
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/pagos.css' %}">
+{% endblock %}
+
+{% block title %}Detalle pagos{% endblock %}
+
+{% block content %}
+<section class="pagodetalle">
+    <div class="pagodetalle__header">
+        <h2 class="pagodetalle__titulo">
+            Detalle de pagos
+        </h2>
+        <p class="pagodetalle__subtitulo">
+            Información de la obra y su historial de pagos.
+        </p>
+    </div>
+    <div class="pagodetalle__obra">
+        <h2 class="pagodetalle__obra__titulo">
+            Datos de la obra
+        </h2>
+        <div class="pagodetalle__obra__header">
+            <div class="pagodetalle__obra__header__text">
+                <p class="pagodetalle__obra__subtitulo">
+                    Cliente
+                </p>
+                <p class="pagodetalle__subtitulo__contenido">
+                    {{obra.cliente.nombre}} {{obra.cliente.apellido}}
+                </p>
+                <p class="pagodetalle__obra__direccion">
+                    {{obra.direccion}} | {{obra.zona.localidad}}
+                </p>
+            </div>
+            {% if obra.negocio %} 
+                <p class="pagodetalle__obra__negocio">Negocio</p>
+            {% else %}
+                <p class="pagodetalle__obra__particular">Particular</p>
+            {% endif %}
+        </div>
+
+        {% if presupuesto %}
+            <div class="pagodetalle__obra__data">
+                <div class="pagodetalle__cards">
+                    <div class="pagodetalle__card">
+                        <p class="pagodetalle__card__titulo">Superficie</p>
+                        <p class="pagodetalle__card__valor">{{presupuesto.superficie}}</p>
+                    </div>
+                    <div class="pagodetalle__card">
+                        <p class="pagodetalle__card__titulo">Material</p>
+                        <p class="pagodetalle__card__valor">{{presupuesto.material}}</p>
+                    </div>
+                    <div class="pagodetalle__card">
+                        <p class="pagodetalle__card__titulo">Metros cuadrados</p>
+                        <p class="pagodetalle__card__valor">{{presupuesto.metro_2|floatformat:2}} m²</p>
+                    </div>
+                    <div class="pagodetalle__card">
+                        <p class="pagodetalle__card__titulo">Precio por metro</p>
+                        <p class="pagodetalle__card__valor">${{presupuesto.precio_metro|floatformat:2}}</p>
+                    </div>
+                    <div class="pagodetalle__card">
+                        <p class="pagodetalle__card__titulo">Recargo</p>
+                        <p class="pagodetalle__card__valor">{{presupuesto.recargo_porcentaje}}%</p>
+                    </div>
+                </div>
+
+                <div class="pagodetalle__observacion">
+                    <p class="pagodetalle__obra__subtitulo">Observación</p>
+                    <p class="pagodetalle__observacion__texto">{{presupuesto.observacion}}</p>
+                </div>
+
+                <div class="pagodetalle__monto">
+                    <p class="pagodetalle__monto__titulo">Monto</p>
+                    <p class="pagodetalle__monto__valor">${{presupuesto.monto|floatformat:2}}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="pagodetalle__historial">
+        <h2 class="pagodetalle__obra__titulo">
+            Datos de los pagos
+        </h2>
+
+        {% if pagos %}
+            <div class="pagodetalle__tabla__wrapper">
+                <table class="pagodetalle__tabla">
+                    <thead>
+                        <tr>
+                            <th scope="col">N°</th>
+                            <th scope="col" class="pagodetalle__tabla__num">Monto</th>
+                            <th scope="col" class="pagodetalle__tabla__num">Monto pagado</th>
+                            {% if obra.negocio %}
+                                <th scope="col" class="pagodetalle__tabla__num">Comisión</th>
+                            {% endif %}
+                            <th scope="col" class="pagodetalle__tabla__num">Resto</th>
+                            {% if obra.negocio %}
+                                <th scope="col" class="pagodetalle__tabla__num">Monto comisión</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pagos %}
+                            <tr>
+                                <td data-label="N°">{{ p.numero }}</td>
+                                <td data-label="Monto" class="pagodetalle__tabla__num">${{ presupuesto.monto|floatformat:2 }}</td>
+                                <td data-label="Monto pagado" class="pagodetalle__tabla__num">${{ p.monto_pagado|floatformat:2 }}</td>
+                                {% if obra.negocio %}
+                                    <td data-label="Comisión" class="pagodetalle__tabla__num">{{ p.comision_porcentaje }}%</td>
+                                {% endif %}
+                                <td data-label="Resto" class="pagodetalle__tabla__num">${{ p.resto|floatformat:2 }}</td>
+                                {% if obra.negocio %}
+                                    <td data-label="Monto comisión" class="pagodetalle__tabla__num">${{ p.comision_monto|floatformat:2 }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elif presupuesto %}
+            <p class="pagodetalle__vacio">Todavía no hay pagos registrados.</p>
+        {% else %}
+            <p class="pagodetalle__vacio">
+                Esta obra no tiene un presupuesto aceptado aún.
+            </p>
+        {% endif %}
+
+        {% if presupuesto %}
+            <button
+                type="button"
+                class="pagos__btn__agregar js-agregar-pago"
+                data-presupuesto-id="{{ presupuesto.pk }}"
+                data-presupuesto-monto="{{ presupuesto.monto }}"
+            >
+                Agregar pago
+            </button>
+            <dialog
+                id="pago-modal"
+                class="pago-modal"
+                {% if abrir_modal_pago %}data-open="true"{% endif %}
+            >
+                <button
+                    type="button"
+                    id="pago-modal-cerrar"
+                    class="pago-modal__cerrar"
+                >
+                    Cerrar
+                </button>
+
+                {% include 'pagos/pago_crear.html' %}
+            </dialog>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/pago-crear.js' %}" defer></script>
+{% endblock %}

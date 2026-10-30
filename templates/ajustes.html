@@ -1,3 +1,149 @@
-<h1>
-    Hi from ajustes
-</h1>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/ajustes.css' %}">
+{% endblock %}
+
+{% block title %}Ajustes{% endblock %}
+
+{% block content %}
+<section class="ajustes">
+  <div class="ajustes__header">
+    <h1 class="ajustes__title">
+        Ajustes
+    </h1>
+    <p class="ajustes__subtitle">
+        Seccion para modificar los datos estándares.
+    </p>
+  </div>
+  <div class="ajustes__panel">
+    <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">
+            Zonas
+        </h3>
+        {% if zonas_cargadas %}
+        <div class="ajustes__lista">
+            {% for z in zonas_cargadas %}
+                <p class="ajustes__dato">
+                    {{z.localidad}}
+                </p>
+            {% endfor %}
+        </div>
+
+        {% else %}
+            <p class="ajustes__vacio">
+                No hay zonas cargadas aún
+            </p>
+        {% endif %}
+        <form method="POST" class="ajustes__form">
+            {% csrf_token %}
+            {{ zona_form.as_p }}
+            <input type="hidden" name="form_type" value="zona">
+            <button type="submit" class="ajustes__btn">Guardar zona</button>
+        </form>
+    </div>
+    <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">
+            Proxima acción
+        </h3>
+        {% if acciones_cargadas %}
+        <div class="ajustes__lista">
+            {% for a in acciones_cargadas %}
+                <p class="ajustes__dato">
+                    {{a.accion}}
+                </p>
+            {% endfor %}
+        </div>
+
+        {% else %}
+            <p class="ajustes__vacio">
+                No hay acciones cargadas aún
+            </p>
+        {% endif %}
+        <form method="POST" class="ajustes__form">
+            {% csrf_token %}
+            {{ accion_form.as_p }}
+            <input type="hidden" name="form_type" value="accion">
+            <button type="submit" class="ajustes__btn">Guardar accion</button>
+        </form>
+    </div>
+
+    <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">
+            Estado de la obra
+        </h3>
+        {% if estados_cargados %}
+        <div class="ajustes__lista">
+            {% for e in estados_cargados %}
+                <p class="ajustes__dato">
+                    {{e.estado}}
+                </p>
+            {% endfor %}
+        </div>
+
+        {% else %}
+            <p class="ajustes__vacio">
+                No hay estados cargados aún
+            </p>
+        {% endif %}
+        <form method="POST" class="ajustes__form">
+            {% csrf_token %}
+            {{ estado_form.as_p }}
+            <input type="hidden" name="form_type" value="estado">
+            <button type="submit" class="ajustes__btn">Guardar estado</button>
+        </form>
+    </div>
+    <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">
+            Material de obra
+        </h3>
+        {% if materiales_cargados %}
+        <div class="ajustes__lista">
+            {% for m in materiales_cargados %}
+                <p class="ajustes__dato">
+                    {{m.material}}
+                </p>
+            {% endfor %}
+        </div>
+
+        {% else %}
+            <p class="ajustes__vacio">
+                No hay materiales cargados aún
+            </p>
+        {% endif %}
+        <form method="POST" class="ajustes__form">
+            {% csrf_token %}
+            {{ material_form.as_p }}
+            <input type="hidden" name="form_type" value="material">
+            <button type="submit" class="ajustes__btn">Guardar material</button>
+        </form>
+    </div>
+    <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">
+            Superficies de la obra
+        </h3>
+        {% if superficies_cargadas %}
+        <div class="ajustes__lista">
+            {% for s in superficies_cargadas %}
+                <p class="ajustes__dato">
+                    {{s.superficie}}
+                </p>
+            {% endfor %}
+        </div>
+
+        {% else %}
+            <p class="ajustes__vacio">
+                No hay superficies cargadas aún
+            </p>
+        {% endif %}
+        <form method="POST" class="ajustes__form">
+            {% csrf_token %}
+            {{ superficie_form.as_p }}
+            <input type="hidden" name="form_type" value="superficie">
+            <button type="submit" class="ajustes__btn">Guardar superficie</button>
+        </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
