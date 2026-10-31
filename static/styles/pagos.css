@@ -49,8 +49,8 @@
 }
 
 .pagos__negocio__input {
-  width: 18px;
-  height: 18px;
+  width: 1.25rem;
+  height: 1.25rem;
   accent-color: var(--primary-color);
   cursor: pointer;
 }

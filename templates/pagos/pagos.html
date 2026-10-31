@@ -53,15 +53,12 @@
                 <p class="pagos__obra__label">Monto</p>
                 <p class="pagos__obra__valor">${{ p.monto|floatformat:2 }}</p>
               </div>
-              {% if pagos %}
                 <div class="pagos__obra__monto">
                   <p class="pagos__obra__label">Resto</p>
                   <p class="pagos__obra__valor valor__resto">${{ p.resto_actual|floatformat:2 }}</p>
                   
                 </div>
-              {% else %}
-                <p class="pagos__obra__vacio">Aún no hay pagos registrados</p>
-              {% endif %}
+             
             </div>
           </div>
         </a>

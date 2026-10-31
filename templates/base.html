@@ -18,13 +18,11 @@
       {% block navbar %}
       <nav class="navbar">
         <div class="navbar__home">
-          <a href="{% url 'ajustes:ajustes' %}">
             <img
               class="navbar__logo"
               src="{% static 'images/techos_valor_logo.png' %}"
               alt="brands logo"
             />
-          </a>
         </div>
         <ul class="navbar__links">
           <li>
@@ -44,7 +42,20 @@
               >Pagos</a
             >
           </li>
+          <li>
+            <a href="{% url 'ajustes:ajustes' %}" class="navbar__link">
+              Ajustes
+            </a>
+          </li>
         </ul>
+        <div class="navbar__log">
+          <form method="post" action="{% url 'login:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="navbar__log__btn" aria-label="Cerrar sesión">
+              <svg class="navbar__log__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"/><path d="M9 12h12l-3-3m0 6l3-3"/></g></svg>
+            </button>
+          </form> 
+        </div>
       </nav>
       {% endblock %}
     </header>

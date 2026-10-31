@@ -1,6 +1,7 @@
 :root {
   --primary-color: #1170b8;
-  --primary-color-rgb: #1170b84e;
+  /* --primary-color-rgb: #1170b84e; */
+  --primary-color-rgb: rgba(17, 112, 184, 0.08);
   --primary-dark: #0d5a95;
   --secondary-color: #0b2e4a;
   --accent-color: #f29b1d;
@@ -15,8 +16,9 @@
   --danger-color: #c0392b;
   --success-color: #28a745;
 
-  --font-main: "Roboto", "Segoe UI", sans-serif;
-  --font-heading: "Roboto", "Segoe UI", sans-serif;
+  --font-main: "Poppins", "Segoe UI", sans-serif;
+  --font-heading: "Poppins", "Segoe UI", sans-serif;
+  /* --font-title: "Volkorn", sans-serif; */
 
   font-size: clamp(16px, 1vmax, 24px);
 
@@ -36,6 +38,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: var(--font-main);
 }
 
 [hidden] {
@@ -162,6 +165,41 @@ img {
   font-weight: 500;
 }
 
+.navbar__log {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+}
+
+.navbar__log form {
+  display: flex;
+}
+
+.navbar__log__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background-color: var(--surface-color);
+  border: 2px solid var(--danger-color);
+  color: var(--danger-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.navbar__log__btn:hover {
+  background-color: var(--danger-color);
+  color: var(--bg-color);
+}
+
+.navbar__log__svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -204,7 +242,7 @@ textarea {
   font-size: var(--fs-base);
   color: var(--text-color);
   background: var(--surface-color);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   border-radius: var(--radius-sm);
 }
 
@@ -246,4 +284,12 @@ textarea:focus {
   .navbar__logo {
     height: 36px;
   }
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
