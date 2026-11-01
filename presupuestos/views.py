@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import Presupuesto
 from django.db.models import Q, Count
 from obras.models import Obra, ProximaAccion, EstadoObra
@@ -81,3 +82,15 @@ def presupuesto_crear(request):
         return render(request, 'presupuestos/presupuesto_crear.html', {'form': form, 'obra_form': obra_form})
     except:
         return render(request, 'not_found.html')
+
+def presupuesto_borrar(request, pk):
+    if request.method == 'POST':
+        presupuesto = get_object_or_404(Presupuesto, pk=pk)
+
+        if presupuesto.pagos_set.exists():
+            messages.error(request, 'No se puede eliminar un presupuesto que tiene pagos asociados')
+        else:
+            presupuesto.delete()
+            messages.success(request, 'Presupuesto eliminado correctamente')
+
+    return redirect('presupuestos:presupuestos_total')

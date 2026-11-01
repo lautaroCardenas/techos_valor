@@ -5,6 +5,10 @@ const panelPresupuesto = document.getElementById("presupuesto__panel");
 const panelObra = document.getElementById("obra__panel");
 const abrirObra = document.getElementById("modal__abrir__obra");
 const volverPresupuesto = document.getElementById("modal__volver__presupuesto");
+const modalConfirmacion = document.getElementById("modal__confirmacion");
+const botonesBorrar = document.querySelectorAll(".presupuesto__btn__delete");
+const botonCancelar = document.getElementById("cancelar__borrar");
+const formBorrar = document.getElementById("form__borrar");
 
 function mostrarPanel(panelActivo) {
   if (!panelPresupuesto || !panelObra) return;
@@ -59,5 +63,35 @@ document.addEventListener("keydown", (event) => {
     if (modalPresupuesto && !modalPresupuesto.hidden) {
       modalPresupuesto.hidden = true;
     }
+  }
+});
+
+botonesBorrar.forEach((boton) => {
+  boton.addEventListener("click", () => {
+    const presupuestoId = boton.dataset.presupuesto;
+
+    if (!formBorrar || !modalConfirmacion) return;
+
+    formBorrar.action = `/presupuestos/borrar/${presupuestoId}/`;
+
+    modalConfirmacion.hidden = false;
+  });
+});
+
+if (botonCancelar && modalConfirmacion) {
+  botonCancelar.addEventListener("click", () => {
+    modalConfirmacion.hidden = true;
+  });
+
+  modalConfirmacion.addEventListener("click", (event) => {
+    if (event.target === modalConfirmacion) {
+      modalConfirmacion.hidden = true;
+    }
+  });
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && modalConfirmacion) {
+    modalConfirmacion.hidden = true;
   }
 });

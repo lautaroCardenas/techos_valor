@@ -5,6 +5,7 @@
   --primary-dark: #0d5a95;
   --secondary-color: #0b2e4a;
   --accent-color: #f29b1d;
+  --accent-dark: rgb(192, 122, 24);
   --accent-color-rgb: rgba(242, 153, 29, 0.57);
 
   --bg-color: #f6f7f9;
@@ -14,6 +15,7 @@
   --text-muted: #6b7280;
 
   --danger-color: #c0392b;
+  --danger-dark: #962f23;
   --success-color: #28a745;
 
   --font-main: "Poppins", "Segoe UI", sans-serif;
