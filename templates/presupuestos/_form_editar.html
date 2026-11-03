@@ -1,0 +1,22 @@
+<form
+    method="POST"
+    action="{% url 'presupuestos:presupuesto_actualizar' pres.pk %}"
+    class="presupuesto__form__editar"
+>
+    {% csrf_token %}
+
+    {{ presupuesto_form.as_p }}
+
+    <div class="presupuesto__acciones__editar">
+        <button
+            type="button"
+            class="presupuesto__cancelar__editar"   
+        >
+            Cancelar
+        </button>
+
+        <button type="submit" class="presupuestoactualizar__btn">
+            Guardar cambios
+        </button>
+    </div>
+</form>

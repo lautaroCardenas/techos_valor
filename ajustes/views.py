@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ZonaForm, ProximaAccionForm, EstadoObraForm, MaterialForm, SuperficieForm
 from django.contrib import messages
 from obras.models import Zona, ProximaAccion, EstadoObra
@@ -85,3 +85,31 @@ def ajustes(request):
                 'superficies_cargadas': superficies_cargadas
                 }
     return render(request, 'ajustes.html', contexto)
+
+def ajustes_borrar(request, tipo, pk):
+    modelos = {
+        'zona': Zona,
+        'accion': ProximaAccion,
+        'estado': EstadoObra,
+        'material': Material,
+        'superficie': Superficie,
+    }
+
+    modelo = modelos.get(tipo)
+
+    if modelo is None:
+        messages.error(request, 'Tipo de dato inválido.')
+        return redirect('ajustes:ajustes')
+    
+    elemento = get_object_or_404(modelo, pk=pk)
+
+    try:
+        elemento.delete()
+        messages.success(request, f'El item se eliminó correctamente.')
+    except:
+        messages.error(
+            request,
+            f'No se puede eliminar el item porque está siendo utilizado.'
+        )
+
+    return redirect('ajustes:ajustes')

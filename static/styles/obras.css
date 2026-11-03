@@ -396,7 +396,7 @@
 }
 
 .obradetalle__btn:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--accent-dark);
   text-decoration: none;
   transform: translateY(-2px);
 }
@@ -574,6 +574,100 @@
 }
 .cliente__btn:hover {
   background-color: var(--primary-dark);
+}
+
+/* obra_actualizar.html. */
+.obraactualizar__container form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.obraactualizar__container .obradetalle__cliente {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--space-3);
+}
+
+.obradetalle__campo-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.obradetalle__campo-header label {
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.obradetalle__campo-header input,
+.obradetalle__campo-header select {
+  width: 100%;
+}
+
+.obraactualizar__container .obradetalle__data__item input,
+.obraactualizar__container .obradetalle__data__item select,
+.obraactualizar__container .obradetalle__data__item textarea {
+  width: 100%;
+}
+
+.obraactualizar__container .obradetalle__data__item textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Botones */
+.obradetalle__acciones {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.obraactualizar__btn,
+.obraactualizar__btn__cancelar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 8rem;
+  height: 2.75rem;
+  padding: 0 var(--space-4);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    filter 0.15s ease;
+}
+
+.obraactualizar__btn {
+  color: #fff;
+  background-color: var(--success-color);
+  border: 1.5px solid var(--success-color);
+  transition: all 0.2s ease;
+}
+.obraactualizar__btn:hover {
+  background-color: var(--bg-color);
+  color: var(--success-color);
+}
+
+.obraactualizar__btn__cancelar {
+  color: #fff;
+  background-color: var(--danger-color);
+  border: 1.5px solid var(--danger-color);
+  transition: all 0.2s ease;
+}
+.obraactualizar__btn__cancelar:hover {
+  background-color: var(--bg-color);
+  color: var(--danger-color);
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {

@@ -10,7 +10,7 @@
 
 {% block content %}
 <section class="obradetalle">
-    <div class="obradetalle__container">
+    <div class="obradetalle__container obraactualizar__container">
 
         <form method="POST">
             {% csrf_token %}
@@ -121,11 +121,11 @@
 
             <div class="obradetalle__acciones">
 
-                <button type="submit" class="obradetalle__btn">
+                <button type="submit" class="obraactualizar__btn">
                     Guardar cambios
                 </button>
 
-                <a href="{% url 'obras:obra_detalle' obra.pk %}">
+                <a href="{% url 'obras:obra_detalle' obra.pk %}" class="obraactualizar__btn__cancelar">
                     Cancelar
                 </a>
 

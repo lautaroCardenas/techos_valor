@@ -58,3 +58,99 @@ document.addEventListener("keydown", (event) => {
     });
   }
 });
+
+const botonesEditar = document.querySelectorAll("[data-editar-presupuesto]");
+
+botonesEditar.forEach((boton) => {
+  boton.addEventListener("click", async () => {
+    const modal = boton.closest(".presupuesto__modal");
+
+    const detalle = modal.querySelector(".presupuesto__detalle");
+
+    const edicion = modal.querySelector(".presupuesto__edicion");
+
+    detalle.hidden = true;
+    edicion.hidden = false;
+
+    // Si ya se cargó, no volver a solicitarlo.
+    if (edicion.dataset.cargado === "true") return;
+
+    try {
+      const response = await fetch(edicion.dataset.formUrl);
+
+      if (!response.ok) {
+        throw new Error("No se pudo cargar el formulario");
+      }
+
+      edicion.innerHTML = await response.text();
+      edicion.dataset.cargado = "true";
+    } catch (error) {
+      edicion.innerHTML = `
+        <p>No se pudo cargar el formulario.</p>
+        <button type="button" class="presupuesto__volver">
+          Volver
+        </button>
+      `;
+    }
+  });
+});
+
+document.addEventListener("submit", async (event) => {
+  const form = event.target.closest(".presupuesto__form__editar");
+
+  if (!form) return;
+
+  event.preventDefault();
+
+  const modal = form.closest(".presupuesto__modal");
+  const detalle = modal.querySelector(".presupuesto__detalle");
+  const edicion = modal.querySelector(".presupuesto__edicion");
+
+  const botonGuardar = form.querySelector('button[type="submit"]');
+
+  botonGuardar.disabled = true;
+  botonGuardar.textContent = "Guardando...";
+
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    });
+
+    const html = await response.text();
+
+    if (!response.ok) {
+      edicion.innerHTML = html;
+      return;
+    }
+
+    detalle.innerHTML = html;
+    edicion.hidden = true;
+    detalle.hidden = false;
+
+    edicion.innerHTML = "";
+    edicion.dataset.cargado = "false";
+  } catch (error) {
+    alert("Ocurrió un error al guardar el presupuesto.");
+  } finally {
+    botonGuardar.disabled = false;
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const boton = event.target.closest(".presupuesto__cancelar__editar");
+
+  if (!boton) return;
+
+  const modal = boton.closest(".presupuesto__modal");
+
+  const detalle = modal.querySelector(".presupuesto__detalle");
+
+  const edicion = modal.querySelector(".presupuesto__edicion");
+
+  edicion.hidden = true;
+  detalle.hidden = false;
+});

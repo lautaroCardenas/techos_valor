@@ -94,3 +94,46 @@ def presupuesto_borrar(request, pk):
             messages.success(request, 'Presupuesto eliminado correctamente')
 
     return redirect('presupuestos:presupuestos_total')
+
+def presupuesto_actualizar(request, pk):
+    pres = get_object_or_404(Presupuesto, pk=pk)
+
+    if request.method == 'POST':
+        presupuesto_form = PresupuestoForm(
+            request.POST,
+            instance=pres
+        )
+
+        if presupuesto_form.is_valid():
+            presupuesto_form.save()
+
+            messages.success(
+                request,
+                'Presupuesto actualizado correctamente'
+            )
+
+            return render(
+                request,
+                'presupuestos/presupuesto_actualizado.html',
+                {'presupuesto': pres}
+            )
+
+        return render(
+            request,
+            'presupuestos/_form_editar.html',
+            {
+                'pres': pres,
+                'presupuesto_form': presupuesto_form
+            },
+            status=400
+        )
+
+def presupuesto_editar_form(request, pk):
+    pres = get_object_or_404(Presupuesto, pk=pk)
+
+    presupuesto_form = PresupuestoForm(instance=pres)
+
+    return render(request, 'presupuestos/_form_editar.html', {
+        'pres': pres,
+        'presupuesto_form': presupuesto_form
+    })

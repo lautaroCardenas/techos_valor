@@ -28,6 +28,12 @@
                 <p class="ajustes__dato">
                     {{z.localidad}}
                 </p>
+                <form method="POST" action="{% url 'ajustes:ajustes_borrar' 'zona' z.pk %}" class="ajustes__form__delete">
+                    {% csrf_token %}
+                    <button type="submit" class="ajustes__btn__delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+                    </button> 
+                </form>
             {% endfor %}
         </div>
 
@@ -53,6 +59,12 @@
                 <p class="ajustes__dato">
                     {{a.accion}}
                 </p>
+                <form method="POST" action="{% url 'ajustes:ajustes_borrar' 'accion' a.pk %}" class="ajustes__form__delete">
+                    {% csrf_token %}
+                    <button type="submit" class="ajustes__btn__delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+                    </button> 
+                </form>
             {% endfor %}
         </div>
 
@@ -79,6 +91,12 @@
                 <p class="ajustes__dato">
                     {{e.estado}}
                 </p>
+                <form method="POST" action="{% url 'ajustes:ajustes_borrar' 'estado' e.pk %}" class="ajustes__form__delete">
+                    {% csrf_token %}
+                    <button type="submit" class="ajustes__btn__delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+                    </button> 
+                </form>
             {% endfor %}
         </div>
 
@@ -104,6 +122,12 @@
                 <p class="ajustes__dato">
                     {{m.material}}
                 </p>
+                <form method="POST" action="{% url 'ajustes:ajustes_borrar' 'material' m.pk %}" class="ajustes__form__delete">
+                    {% csrf_token %}
+                    <button type="submit" class="ajustes__btn__delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+                    </button> 
+                </form>
             {% endfor %}
         </div>
 
@@ -129,6 +153,12 @@
                 <p class="ajustes__dato">
                     {{s.superficie}}
                 </p>
+                <form method="POST" action="{% url 'ajustes:ajustes_borrar' 'superficie' s.pk %}" class="ajustes__form__delete">
+                    {% csrf_token %}
+                    <button type="submit" class="ajustes__btn__delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+                    </button> 
+                </form>
             {% endfor %}
         </div>
 
