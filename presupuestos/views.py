@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Presupuesto
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Prefetch
 from obras.models import Obra, ProximaAccion, EstadoObra
 from obras.forms import ObraForm, ClienteForm
 from .forms import PresupuestoForm
@@ -39,7 +39,17 @@ def presupuestos_total(request):
             negocio=True
         )
 
-    obras = obras.distinct()
+    # Cada tarjeta muestra datos de la obra y de todos sus presupuestos. Sin esto el
+    # template hacía una consulta por cada cliente, zona, presupuesto, material, etc.
+    obras = obras.distinct().select_related(
+        'cliente', 'zona', 'estado', 'proxima_accion', 'fecha_visita'
+    ).prefetch_related(
+        Prefetch(
+            'presupuesto_set',
+            queryset=Presupuesto.objects.select_related('material', 'superficie').order_by('fecha_actual'),
+            to_attr='presupuestos',
+        )
+    )
 
     proxima_acciones = ProximaAccion.objects.all().order_by('accion')
     estados_obra = EstadoObra.objects.all().order_by('estado')
@@ -61,7 +71,10 @@ def presupuestos_total(request):
 
 def presupuesto_detalle(request, pk):
     try:
-        pres = Presupuesto.objects.get(pk=pk)
+        pres = Presupuesto.objects.select_related(
+            'material', 'superficie', 'obra__cliente', 'obra__zona',
+            'obra__estado', 'obra__proxima_accion', 'obra__fecha_visita',
+        ).get(pk=pk)
         return render(request, 'presupuestos/presupuesto_detalle.html', {'presupuesto': pres})
     except:
         return render(request, 'not_found.html')
