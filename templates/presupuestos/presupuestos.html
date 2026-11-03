@@ -84,9 +84,11 @@
       {% if messages %}
         <div class="presupuestos__mensajes">
           {% for message in messages %}
-            <p class="presupuestos__mensaje {{ message.tags }}">
-              {{ message }}
-            </p>
+            {% if 'presupuestos_messages' in message.tags %}
+              <p class="presupuestos__mensaje {{ message.tags }}">
+                {{ message }}
+              </p>
+            {% endif %}
           {% endfor %}
         </div>
       {% endif %}

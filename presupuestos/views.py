@@ -7,6 +7,8 @@ from obras.forms import ObraForm, ClienteForm
 from .forms import PresupuestoForm
 
 # Create your views here.
+EXTRA_TAG = 'presupuestos_messages'
+
 def presupuestos_total(request):
     # presupuestos = Presupuesto.objects.all().order_by('fecha_actual')
     obras = Obra.objects.annotate(
@@ -88,10 +90,10 @@ def presupuesto_borrar(request, pk):
         presupuesto = get_object_or_404(Presupuesto, pk=pk)
 
         if presupuesto.pagos_set.exists():
-            messages.error(request, 'No se puede eliminar un presupuesto que tiene pagos asociados')
+            messages.error(request, 'No se puede eliminar un presupuesto que tiene pagos asociados', extra_tags=EXTRA_TAG)
         else:
             presupuesto.delete()
-            messages.success(request, 'Presupuesto eliminado correctamente')
+            messages.success(request, 'Presupuesto eliminado correctamente', extra_tags=EXTRA_TAG)
 
     return redirect('presupuestos:presupuestos_total')
 
@@ -109,7 +111,8 @@ def presupuesto_actualizar(request, pk):
 
             messages.success(
                 request,
-                'Presupuesto actualizado correctamente'
+                'Presupuesto actualizado correctamente',
+                extra_tags=EXTRA_TAG
             )
 
             return render(

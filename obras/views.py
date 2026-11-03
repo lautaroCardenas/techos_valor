@@ -6,6 +6,9 @@ from .forms import ObraForm, ClienteForm
 from presupuestos.models import Presupuesto
 
 # Create your views here.
+
+EXTRA_TAGS = 'obras_messages'
+
 def obras_total(request):
     obras = Obra.objects.all().order_by('fecha_contacto')
 
@@ -161,7 +164,7 @@ def obra_actualizar(request, pk):
             obra.save()
             obra_form.save_m2m()
 
-            messages.success(request, 'Obra actualizada exitosamente.')
+            messages.success(request, 'Obra actualizada exitosamente.', extra_tags=EXTRA_TAGS)
 
             return redirect('obras:obra_detalle', pk=obra.pk)
 
@@ -205,9 +208,9 @@ def obra_borrar(request, pk):
         obra = get_object_or_404(Obra, pk=pk)
 
         if obra.presupuesto_set.exists():
-            messages.error(request, 'No se puede eliminar esta obra porque tiene presupuestos asociados')
+            messages.error(request, 'No se puede eliminar esta obra porque tiene presupuestos asociados', extra_tags=EXTRA_TAGS)
         else:
             obra.delete()
-            messages.success(request, 'Obra borrada exitosamente')
+            messages.success(request, 'Obra borrada exitosamente', extra_tags=EXTRA_TAGS)
 
     return redirect('obras:obras_total')    

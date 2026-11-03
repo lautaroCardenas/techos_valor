@@ -17,6 +17,21 @@
         Seccion para modificar los datos estándares.
     </p>
   </div>
+
+  <div class="ajustes__mensajes">
+      {% if messages %}
+        <div class="ajustes__mensajes">
+          {% for message in messages %}
+            {% if 'ajustes_messages' in message.tags %}
+              <p class="ajustes__mensaje {{ message.tags }}">
+                {{ message }}
+              </p>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+  </div>
+
   <div class="ajustes__panel">
     <div class="ajustes__item">
         <h3 class="ajustes__item__titulo">

@@ -33,13 +33,15 @@
             <p class="obras__search__mensaje">Se encontraron {{obras.count}} obras que cumplen con la búsqueda</p>
         {% endif %}
     {% endif %}
-      {% if messages %}
+    {% if messages %}
         <div class="obras__mensajes">
-            {% for message in messages %}
-                <p class="obras__mensaje {{ message.tags }}">
-                    {{ message }}
-                </p>
-            {% endfor %}
+          {% for message in messages %}
+            {% if 'obras_messages' in message.tags %}
+              <p class="obra__mensaje {{ message.tags }}">
+                {{ message }}
+              </p>
+            {% endif %}
+          {% endfor %}
         </div>
     {% endif %}
   </div>

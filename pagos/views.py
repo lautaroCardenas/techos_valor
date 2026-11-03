@@ -103,3 +103,19 @@ def pago_crear(request):
 
     return render(request, 'pagos/pago_crear.html', {'form_pago': PagosForm()})
     
+def pago_borrar(request, pk):
+    if request.method == 'POST':
+        pago = get_object_or_404(Pagos, pk=pk)
+
+        obra_id = pago.presupuesto.obra_id
+
+        ultimo_pago = Pagos.objects.filter(
+            presupuesto=pago.presupuesto
+        ).order_by('-numero').first()
+
+        if ultimo_pago and ultimo_pago.pk == pago.pk:
+            pago.delete()
+
+        return redirect('pagos:pago_detalle', pk=obra_id)
+
+    return redirect('pagos:pagos_total')

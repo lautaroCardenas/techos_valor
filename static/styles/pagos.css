@@ -588,6 +588,44 @@
   background-color: var(--primary-dark);
 }
 
+.pagodetalle__tabla .pagodetalle__tabla__accion {
+  width: 1%;
+  text-align: right;
+}
+
+.pagodetalle__tabla__accion form {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+}
+
+.pagos__btn__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--danger-color);
+  background: transparent;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.pagos__btn__delete:hover {
+  color: var(--surface-color);
+  background-color: var(--danger-color);
+}
+
+.pagos__btn__delete svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
 @media (max-width: 768px) {
   .pagos {
     padding: var(--space-3);

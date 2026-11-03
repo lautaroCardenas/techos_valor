@@ -7,6 +7,7 @@ from presupuestos.models import Material, Superficie
 # Create your views here.
 mensaje_exito = 'El dato se guardó correctamente'
 mensaje_error = 'No se pudo guardar el dato'
+EXTRA_TAGS = 'ajustes_messages'
 
 def ajustes(request):
     zona_form = ZonaForm()
@@ -22,50 +23,50 @@ def ajustes(request):
 
             if zona_form.is_valid():
                 zona_form.save()
-                messages.success(request, mensaje_exito)
+                messages.success(request, mensaje_exito, extra_tags=EXTRA_TAGS)
                 zona_form = ZonaForm() # Limpiar el input del form cuando se muestra.
             else:
-                messages.error(request, mensaje_error)
+                messages.error(request, mensaje_error, extra_tags=EXTRA_TAGS)
 
         elif form_type == 'accion':
             accion_form = ProximaAccionForm(request.POST)
 
             if accion_form.is_valid():
                 accion_form.save()
-                messages.success(request, mensaje_exito)
+                messages.success(request, mensaje_exito, extra_tags=EXTRA_TAGS)
                 accion_form = ProximaAccionForm()
             else:
-                messages.error(request, mensaje_error)
+                messages.error(request, mensaje_error, extra_tags=EXTRA_TAGS)
 
         elif form_type == 'estado':
             estado_form = EstadoObraForm(request.POST)
 
             if estado_form.is_valid():
                 estado_form.save()
-                messages.success(request, mensaje_exito)
+                messages.success(request, mensaje_exito, extra_tags=EXTRA_TAGS)
                 estado_form = EstadoObraForm() 
             else:
-                messages.error(request, mensaje_error)
+                messages.error(request, mensaje_error, extra_tags=EXTRA_TAGS)
 
         elif form_type == 'material':
             material_form = MaterialForm(request.POST)
 
             if material_form.is_valid():
                 material_form.save()
-                messages.success(request, mensaje_exito)
+                messages.success(request, mensaje_exito, extra_tags=EXTRA_TAGS)
                 material_form = MaterialForm()
             else:
-                messages.error(request, mensaje_error)
+                messages.error(request, mensaje_error, extra_tags=EXTRA_TAGS)
         
         elif form_type == 'superficie':
             superficie_form = SuperficieForm(request.POST)
 
             if superficie_form.is_valid():
                 superficie_form.save()
-                messages.success(request, mensaje_exito)
+                messages.success(request, mensaje_exito, extra_tags=EXTRA_TAGS)
                 superficie_form = SuperficieForm()
             else:
-                messages.error(request, mensaje_error)
+                messages.error(request, mensaje_error, extra_tags=EXTRA_TAGS)
 
     zonas_cargadas = Zona.objects.all().order_by('localidad')
     acciones_cargadas = ProximaAccion.objects.all().order_by('accion')
@@ -98,18 +99,19 @@ def ajustes_borrar(request, tipo, pk):
     modelo = modelos.get(tipo)
 
     if modelo is None:
-        messages.error(request, 'Tipo de dato inválido.')
+        messages.error(request, 'Tipo de dato inválido.', extra_tags=EXTRA_TAGS)
         return redirect('ajustes:ajustes')
     
     elemento = get_object_or_404(modelo, pk=pk)
 
     try:
         elemento.delete()
-        messages.success(request, f'El item se eliminó correctamente.')
+        messages.success(request, f'El item se eliminó correctamente.', extra_tags=EXTRA_TAGS)
     except:
         messages.error(
             request,
-            f'No se puede eliminar el item porque está siendo utilizado.'
+            f'No se puede eliminar el item porque está siendo utilizado.',
+            extra_tags=EXTRA_TAGS
         )
 
     return redirect('ajustes:ajustes')
