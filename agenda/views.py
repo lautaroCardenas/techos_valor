@@ -24,7 +24,7 @@ def agenda_eventos(request): # Carga todos los eventos registrados.
             "id": e.id,
             "title": e.titulo,
             "start": local.replace(tzinfo=None).isoformat(),
-            "color": e.tipo.color if e.tipo else "#1170b8",
+            "color": e.tipo.color if e.tipo else "#f29b1d",
             "classNames": [f"estado-{e.estado.estado.lower()}"] if e.estado else [],
             "extendedProps": {
                 "fecha": local.strftime("%Y-%m-%dT%H:%M"),
