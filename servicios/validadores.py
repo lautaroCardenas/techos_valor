@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from .helpers import colapsar_espacios
+from django.utils import timezone
 
 def solo_letras(valor):
     valor_limpio = colapsar_espacios(valor)
@@ -18,3 +19,7 @@ def valores_positivos(valor):
 def campo_obligatorio(valor):
     if valor is None or valor == 0:
         raise ValidationError("El campo es obligatorio")
+
+def fecha_futura(valor):
+    if valor <= timezone.now():
+        raise ValidationError("La fecha ingresada debe ser posterior a hoy")

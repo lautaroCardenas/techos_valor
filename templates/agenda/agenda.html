@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/obras.css' %}">
+{% endblock %}
+
+{% block title %}Agenda{% endblock %}
+
+{% block content %}
+<section class="agenda">
+    <div class="agenda__header">
+        <h1 class="agenda__titulo">Agenda</h1>
+        <p class="agenda__subtitulo">Organizá el trabajo pendiente o por hacer.</p>
+        <div class="agenda__agregarevento__btn">
+            <button type="button" id="btn-agregar-evento">
+                Agregar evento
+            </button>
+        </div>
+    </div>
+    <div id="calendario"
+        data-events-url="{% url 'agenda:agenda_eventos' %}"
+        data-create-url="{% url 'agenda:evento_crear' %}"
+        data-update-url="{% url 'agenda:evento_editar' 0 %}"
+        data-delete-url="{% url 'agenda:evento_borrar' 0 %}"
+        data-move-url="{% url 'agenda:evento_mover' 0 %}"></div>
+
+    <dialog id="dialogo-evento">
+        <h3 id="titulo-dialogo">Nuevo evento</h3>
+        <form id="form-evento">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p id="errores-evento"></p>
+            <button type="submit">Guardar</button>
+            <button type="button" id="eliminar-evento" hidden>Eliminar</button>
+            <button type="button" id="cancelar-evento">Cancelar</button>
+        </form>
+    </dialog>
+</section>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'vendor/fullcalendar/index.global.min.js' %}"></script>
+<script src="{% static 'vendor/fullcalendar/es.global.min.js' %}"></script>
+<script src="{% static 'js/agenda.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{
+  "name": "techos_valor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vendor": "mkdir -p static/vendor/fullcalendar && cp node_modules/fullcalendar/index.global.min.js node_modules/fullcalendar/locales-all.global.min.js static/vendor/fullcalendar/",
+    "postinstall": "npm run vendor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lautaroCardenas/techos_valor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lautaroCardenas/techos_valor/issues"
+  },
+  "homepage": "https://github.com/lautaroCardenas/techos_valor#readme",
+  "dependencies": {
+    "fullcalendar": "^6.1.15"
+  }
+}
