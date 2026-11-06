@@ -671,6 +671,34 @@
 }
 
 @media (max-width: 768px) {
+  .obras {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2);
+    overflow: hidden;
+  }
+  .obras__header {
+    margin-top: var(--space-3);
+  }
+  .obras__title {
+    font-size: 1.75rem;
+    text-align: start;
+  }
+  .obras__input {
+    flex: 1;
+  }
+  .obras__btn__text {
+    display: none;
+  }
+  .obras__mostrar__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .obras__data__header {
+    gap: var(--space-2);
+  }
+
   .obranueva__btn {
     align-self: stretch;
   }
@@ -685,13 +713,18 @@
   }
 
   .obradetalle__header {
-    grid-template-columns: auto 1fr;
-    row-gap: var(--space-1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-2);
+    text-align: center;
   }
 
   .obradetalle__editar {
-    grid-column: 1 / -1;
-    grid-row: auto;
+    width: 100%;
+    align-self: center;
     margin-top: var(--space-3);
   }
 

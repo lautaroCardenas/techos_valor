@@ -876,19 +876,78 @@
 
 @media (max-width: 768px) {
   .presupuestos {
-    padding: var(--space-3);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2);
+    overflow: hidden;
   }
+
+  .presupuestos__header {
+    width: 100%;
+    /* font-size: 1.25rem; */
+    flex-direction: column;
+    align-items: start;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .presupuestos__title {
+    font-size: 1.75rem;
+    text-align: start;
+  }
+
+  .presupuestos__subtitle {
+    margin-bottom: var(--space-4);
+  }
+
+  .presupuestos__btn__agregar {
+    width: 100%;
+    align-self: center;
+    padding: var(--space-3) 0.25rem;
+  }
+
+  .presupuestos__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .presupuestos__btn__text {
+    display: none;
+  }
+
+  .presupuestos__opciones {
+    width: 100%;
+  }
+
   .presupuestos__opciones {
     flex-direction: column;
   }
+
+  .presupuestos__filtros {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-1);
+  }
+
+  .presupuestos__mostrar {
+    margin-top: var(--space-3);
+  }
   .presupuestos__select {
     width: 100%;
+  }
+
+  .presupuestos__btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem var(--space-2);
   }
   .presupuesto__tarjeta {
     flex-direction: column;
   }
   .presupuesto__modal__contenido,
   .obra__modal__contentido {
+    max-height: 100%;
     padding: var(--space-3);
   }
   .presupuesto__dato strong {
@@ -902,5 +961,44 @@
   .presupuesto__cancelar__editar,
   .presupuestoactualizar__btn {
     width: 100%;
+  }
+  .presupuesto__modal,
+  .obra__modal,
+  .modal__confirmacion {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .presupuesto__detalle {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .presupuestodetalle__header {
+    align-items: start;
+  }
+  .presupuesto__meta {
+    align-items: start;
+  }
+  .presupuesto__cabecera {
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: start;
+  }
+  .presupuesto__resumen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .presupuesto__tarjeta {
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+  }
+  .presupuesto__seccion {
+    align-self: start;
+    margin: var(--space-5) 0rem;
   }
 }

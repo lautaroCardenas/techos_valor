@@ -3,7 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="stylesheet" href="{% static 'styles/global.css' %}">
     <link rel="icon" type="image/png" href="{% static 'images/icons/favicon-96x96.png' %}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{% static 'images/icons/favicon.svg' %}" />
@@ -26,26 +27,36 @@
             />
         </div>
         <ul class="navbar__links">
-          <li>
+          <li class="navbar__link__item">
             <a
               href="{% url 'presupuestos:presupuestos_total' %}"
               class="navbar__link"
-              >Presupuestos</a
+              >
+              <svg class="navbar__link__svg"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M15 2.5V4c0 1.414 0 2.121.44 2.56C15.878 7 16.585 7 18 7h1.5"/><path d="M4 16V8c0-2.828 0-4.243.879-5.121C5.757 2 7.172 2 10 2h4.172c.408 0 .613 0 .797.076c.183.076.328.22.617.51l3.828 3.828c.29.29.434.434.51.618c.076.183.076.388.076.796V16c0 2.828 0 4.243-.879 5.121C18.243 22 16.828 22 14 22h-4c-2.828 0-4.243 0-5.121-.879C4 20.243 4 18.828 4 16m4-5h8m-8 3h8m-8 3h4.17"/></g></svg>
+              <span class="navbar__link__text">Presupuestos</span>
+            </a
             >
           </li>
-          <li>
+          <li class="navbar__link__item">
             <a href="{% url 'obras:obras_total' %}" class="navbar__link"
-              >Obras</a
+              >
+              <svg class="navbar__link__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24"><path fill="currentColor" d="M30 25v-2h-2.1c-.1-.6-.4-1.2-.7-1.8l1.5-1.5l-1.4-1.4l-1.5 1.5c-.5-.3-1.1-.6-1.8-.7V17h-2v2.1c-.6.1-1.2.4-1.8.7l-1.5-1.5l-1.4 1.4l1.5 1.5c-.3.5-.6 1.1-.7 1.8H16v2h2.1c.1.6.4 1.2.7 1.8l-1.5 1.5l1.4 1.4l1.5-1.5c.5.3 1.1.6 1.8.7V31h2v-2.1c.6-.1 1.2-.4 1.8-.7l1.5 1.5l1.4-1.4l-1.5-1.5c.3-.5.6-1.1.7-1.8zm-7 2c-1.7 0-3-1.3-3-3s1.3-3 3-3s3 1.3 3 3s-1.3 3-3 3M21.485 7.126l-9-5a1 1 0 0 0-.97 0l-9 5A1 1 0 0 0 2 8v10a1 1 0 0 0 .514.874l9 5A1 1 0 0 0 13 23v-9.412L20 9.7V14h2V8a1 1 0 0 0-.515-.874M12 4.144L18.941 8L12 11.856L5.06 8zM4 17.411V9.7l7 3.89v7.71z"/></svg>
+              <span class="navbar__link__text">Obras</span>
+            </a
             >
           </li>
-          <li>
+          <li class="navbar__link__item">
             <a href="{% url 'pagos:pagos_total' %}" class="navbar__link"
-              >Pagos</a
+              >
+              <svg class="navbar__link__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.5V3M5.5 8.5c0 .75.67 1 1.5 1s1.5 0 1.5-1c0-1.5-3-1.5-3-3c0-1 .67-1 1.5-1s1.5.38 1.5 1M7 9.5V11"/><circle cx="7" cy="7" r="6.5"/></g></svg>
+              <span class="navbar__link__text">Pagos</span>
+            </a
             >
           </li>
-          <li>
+          <li class="navbar__link__item">
             <a href="{% url 'ajustes:ajustes' %}" class="navbar__link">
-              Ajustes
+              <svg class="navbar__link__svg"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37c1 .608 2.296.07 2.572-1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/></g></svg>
+              <span class="navbar__link__text">Ajustes</span>
             </a>
           </li>
         </ul>

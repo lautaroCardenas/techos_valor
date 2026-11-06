@@ -42,6 +42,10 @@
   font-weight: 500;
 }
 
+.registro__subtitulo {
+  color: var(--text-muted);
+}
+
 .registro__form {
   display: flex;
   flex-direction: column;
@@ -94,4 +98,18 @@
 
 .registro__opciones__link:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .registro {
+    width: 100%;
+    padding: var(--space-2);
+    overflow: hidden;
+  }
+  .registro__container {
+    min-width: 100%;
+  }
+  .registro__subtitulo {
+    text-align: center;
+  }
 }
