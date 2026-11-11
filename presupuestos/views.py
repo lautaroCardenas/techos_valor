@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import Presupuesto
 from django.db.models import Q, Count
 from obras.models import Obra, ProximaAccion, EstadoObra
@@ -6,6 +7,8 @@ from obras.forms import ObraForm, ClienteForm
 from .forms import PresupuestoForm
 
 # Create your views here.
+EXTRA_TAG = 'presupuestos_messages'
+
 def presupuestos_total(request):
     # presupuestos = Presupuesto.objects.all().order_by('fecha_actual')
     obras = Obra.objects.annotate(
@@ -81,3 +84,59 @@ def presupuesto_crear(request):
         return render(request, 'presupuestos/presupuesto_crear.html', {'form': form, 'obra_form': obra_form})
     except:
         return render(request, 'not_found.html')
+
+def presupuesto_borrar(request, pk):
+    if request.method == 'POST':
+        presupuesto = get_object_or_404(Presupuesto, pk=pk)
+
+        if presupuesto.pagos_set.exists():
+            messages.error(request, 'No se puede eliminar un presupuesto que tiene pagos asociados', extra_tags=EXTRA_TAG)
+        else:
+            presupuesto.delete()
+            messages.success(request, 'Presupuesto eliminado correctamente', extra_tags=EXTRA_TAG)
+
+    return redirect('presupuestos:presupuestos_total')
+
+def presupuesto_actualizar(request, pk):
+    pres = get_object_or_404(Presupuesto, pk=pk)
+
+    if request.method == 'POST':
+        presupuesto_form = PresupuestoForm(
+            request.POST,
+            instance=pres
+        )
+
+        if presupuesto_form.is_valid():
+            presupuesto_form.save()
+
+            messages.success(
+                request,
+                'Presupuesto actualizado correctamente',
+                extra_tags=EXTRA_TAG
+            )
+
+            return render(
+                request,
+                'presupuestos/presupuesto_actualizado.html',
+                {'presupuesto': pres}
+            )
+
+        return render(
+            request,
+            'presupuestos/_form_editar.html',
+            {
+                'pres': pres,
+                'presupuesto_form': presupuesto_form
+            },
+            status=400
+        )
+
+def presupuesto_editar_form(request, pk):
+    pres = get_object_or_404(Presupuesto, pk=pk)
+
+    presupuesto_form = PresupuestoForm(instance=pres)
+
+    return render(request, 'presupuestos/_form_editar.html', {
+        'pres': pres,
+        'presupuesto_form': presupuesto_form
+    })

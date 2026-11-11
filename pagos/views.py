@@ -17,28 +17,24 @@ def pagos_total(request):
     )
 
     search_input = request.GET.get('search_input', '').strip()
-    negocio_filter = request.GET.get('filter', '').strip()
+    negocio_filter = request.GET.get('negocio', '').strip()
 
-    presupuestos = Presupuesto.objects.filter(aceptado=True)
+    presupuestos = Presupuesto.objects.filter(aceptado=True).select_related('obra__cliente', 'obra__zona').order_by('obra')
 
     if (search_input):
-        pagos = pagos.filter(
-            Q(presupuesto__obra__cliente__nombre__icontains=search_input) |
-            Q(presupuesto__obra__cliente__apellido__icontains=search_input)
+        presupuestos = presupuestos.filter(
+            Q(obra__cliente__nombre__icontains=search_input) |
+            Q(obra__cliente__apellido__icontains=search_input)
         )
 
     if negocio_filter:
         presupuestos = presupuestos.filter(
-            aceptado=True
+            obra__negocio=True
         )
 
-    # obras = obras.filter(
-    #     presupuesto__aceptado=True
-    # ).distinct()
-    # obras = obras.distinct()
-    presupuestos = Presupuesto.objects.filter(
-        aceptado=True
-    ).select_related('obra__cliente').order_by('obra')
+    # presupuestos = Presupuesto.objects.filter(
+    #     aceptado=True
+    # ).select_related('obra__cliente').order_by('obra')
 
     for p in presupuestos:
         ultimo_pago = Pagos.objects.filter(
@@ -107,3 +103,19 @@ def pago_crear(request):
 
     return render(request, 'pagos/pago_crear.html', {'form_pago': PagosForm()})
     
+def pago_borrar(request, pk):
+    if request.method == 'POST':
+        pago = get_object_or_404(Pagos, pk=pk)
+
+        obra_id = pago.presupuesto.obra_id
+
+        ultimo_pago = Pagos.objects.filter(
+            presupuesto=pago.presupuesto
+        ).order_by('-numero').first()
+
+        if ultimo_pago and ultimo_pago.pk == pago.pk:
+            pago.delete()
+
+        return redirect('pagos:pago_detalle', pk=obra_id)
+
+    return redirect('pagos:pagos_total')
