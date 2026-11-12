@@ -21,6 +21,7 @@ def presupuestos_total(request):
             Q(cliente__nombre__icontains=search_input) |
             Q(cliente__apellido__icontains=search_input) |
             Q(direccion__icontains=search_input) |
+            Q(zona__localidad__icontains=search_input) |
             Q(presupuesto__material__material__icontains=search_input)
         )
 

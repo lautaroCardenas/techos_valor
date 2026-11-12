@@ -17,7 +17,8 @@ def obras_total(request):
         obras = obras.filter(
             Q(cliente__nombre__icontains=search_input) | 
             Q(cliente__apellido__icontains=search_input) |
-            Q(direccion__icontains=search_input)
+            Q(direccion__icontains=search_input) |
+            Q(zona__localidad__icontains=search_input)
         )
 
     return render(request, 'obras/obras.html', {'obras': obras, 'search_input': search_input})
