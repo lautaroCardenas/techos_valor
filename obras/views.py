@@ -60,6 +60,12 @@ def obra_crear(request):
                 if request.POST.get("origen") == "presupuestos":
                     request.session["abrir_modal_presupuesto"] = True
                 return redirect("presupuestos:presupuestos_total")
+            else:
+                if request.POST.get("origen") == "presupuestos":
+                    request.session["obra_pendiente"] = request.POST.dict()
+                    request.session["abrir_modal_obra"] = True
+
+                    return redirect("presupuestos:presupuestos_total")
         else:
             datos_obra = request.session.pop("obra_pendiente", {})
             form = ObraForm(initial=datos_obra)
@@ -123,6 +129,14 @@ def cliente_crear(request):
                 "proxima_accion", "fecha_visita",
             ]
         }
+        request.session["cliente_pendiente"] = request.POST.dict()
+
+        if request.POST.get("origen") == "presupuestos":
+            request.session["abrir_modal_cliente"] = True
+            request.session["abrir_modal_obra"] = True
+            request.session["abrir_modal_presupuesto"] = True
+            return redirect("presupuestos:presupuestos_total")
+
         return render(request, "obras/obra_crear.html", {
             "obra_form": ObraForm(initial=datos_obra),
             "cliente_form": form_cliente,

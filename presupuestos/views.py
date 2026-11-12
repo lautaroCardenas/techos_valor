@@ -47,20 +47,44 @@ def presupuestos_total(request):
     proxima_acciones = ProximaAccion.objects.all().order_by('accion')
     estados_obra = EstadoObra.objects.all().order_by('estado')
     # form = PresupuestoForm()
-    datos_presupuesto = request.session.get(
-        "presupuesto_pendiente", {}
+    # datos_presupuesto = request.session.get(
+    #     "presupuesto_pendiente", {}
+    # )
+    datos_presupuesto = request.session.pop(
+        "presupuesto_pendiente", None
     )
-    datos_obra = request.session.get("obra_pendiente", {})
-    form = PresupuestoForm(initial=datos_presupuesto)
-    obra_form = ObraForm(initial=datos_obra)
-    cliente_form = ClienteForm()
+
+    if datos_presupuesto:
+        form = PresupuestoForm(datos_presupuesto)
+        form.is_valid()
+    else:
+        form = PresupuestoForm()
+    
+    datos_obra = request.session.pop("obra_pendiente", None)
+
+    if datos_obra:
+        obra_form = ObraForm(datos_obra)
+        obra_form.is_valid()
+    else:
+        obra_form = ObraForm()
+    
+    datos_cliente = request.session.pop("cliente_pendiente", None)
+
+    if datos_cliente:
+        cliente_form = ClienteForm(datos_cliente)
+        cliente_form.is_valid()
+    else:
+        cliente_form = ClienteForm()
 
     abrir_modal_obra = request.session.pop("abrir_modal_obra", False)
+    abrir_modal_cliente = request.session.pop(
+        "abrir_modal_cliente", False
+    )
     abrir_modal_presupuesto = request.session.pop(
         "abrir_modal_presupuesto", False
     )
 
-    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form, 'cliente_form': cliente_form, 'abrir_modal_obra':abrir_modal_obra, 'abrir_modal_presupuesto': abrir_modal_presupuesto})
+    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form, 'cliente_form': cliente_form, 'abrir_modal_obra':abrir_modal_obra, 'abrir_modal_presupuesto': abrir_modal_presupuesto, 'abrir_modal_cliente': abrir_modal_cliente,})
 
 def presupuesto_detalle(request, pk):
     try:
@@ -79,6 +103,11 @@ def presupuesto_crear(request):
             if form.is_valid():
                 form.save()
                 return redirect('presupuestos:presupuestos_total')
+            
+            request.session["presupuesto_pendiente"] = request.POST.dict()
+            request.session["abrir_modal_presupuesto"] = True
+
+            return redirect('presupuestos:presupuestos_total')
         else:
             form = PresupuestoForm()
         return render(request, 'presupuestos/presupuesto_crear.html', {'form': form, 'obra_form': obra_form})

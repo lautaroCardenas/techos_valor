@@ -24,3 +24,18 @@ class PagosForm(forms.ModelForm):
     class Meta:
         model = Pagos
         fields = ['numero', 'monto_pagado', 'comision_porcentaje']
+
+    def clean_monto_pagado(self):
+        monto_pagado = self.cleaned_data.get('monto_pagado')
+        if monto_pagado < 0:
+            raise ValidationError("El monto pagado no puede ser menor a 0")
+        
+        
+        return monto_pagado
+
+    def clean_numero(self):
+        numero = self.cleaned_data.get('numero')
+        if numero < 0:
+            raise ValidationError("El número de pago no puede ser menor a 0")
+        return numero
+
