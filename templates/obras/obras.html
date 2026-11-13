@@ -30,7 +30,7 @@
         {% if not obras %}
             <p class="obras__search__error">No se encontraron obras que cumplan con la búsqueda</p>
         {% else %}
-            <p class="obras__search__mensaje">Se encontraron {{obras.count}} obras que cumplen con la búsqueda</p>
+            <p class="obras__search__mensaje">Se encontraron {{obras|length}} obras que cumplen con la búsqueda</p>
         {% endif %}
     {% endif %}
     {% if messages %}

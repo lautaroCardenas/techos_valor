@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from psycopg_pool import ConnectionPool
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,8 +129,24 @@ DATABASES = {
         'PASSWORD': os.environ['DB_PASSWORD'],
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),
-        # Neon exige conexión cifrada: DB_SSLMODE=require. En local alcanza con prefer.
-        'OPTIONS': {'sslmode': os.getenv('DB_SSLMODE', 'prefer')},
+        # Los cursores del lado del servidor (que usan los <select> de los formularios)
+        # cuestan dos idas y vueltas a Neon por consulta; con pocos datos no hacen falta.
+        'DISABLE_SERVER_SIDE_CURSORS': True,
+        'OPTIONS': {
+            # Neon exige conexión cifrada: DB_SSLMODE=require. En local alcanza con prefer.
+            'sslmode': os.getenv('DB_SSLMODE', 'prefer'),
+            # Pool de conexiones: abrir una conexión con Neon tarda ~1 s, así que se
+            # reutilizan entre requests en vez de abrir una nueva cada vez.
+            'pool': {
+                'min_size': 1,
+                'max_size': 4,
+                # Neon suspende la base tras ~5 min sin uso y corta las conexiones:
+                # se descartan las que llevan 4 min ociosas y se verifica cada una
+                # antes de usarla, así nunca se entrega una conexión muerta.
+                'max_idle': 240,
+                'check': ConnectionPool.check_connection,
+            },
+        },
     }
 }
 
