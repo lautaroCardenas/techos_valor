@@ -755,6 +755,36 @@
   height: 1.5rem;
 }
 
+.presupuestodetalle__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.presupuestodetalle__header__pdf__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 2.5rem;
+  padding: 0 0.85rem;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--accent-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition: background-color 0.15s ease;
+}
+
+.presupuestodetalle__header__pdf__btn:hover {
+  background: var(--accent-dark);
+}
+
+.presupuestodetalle__header__pdf__btn svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
 .presupuesto__form__editar {
   display: flex;
   flex-direction: column;

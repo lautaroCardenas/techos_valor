@@ -1,0 +1,106 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Presupuesto P{{ presupuesto.pk }}</title>
+<style>
+  @page { size: a4 portrait; margin: 1.8cm 1.6cm; }
+  body { font-family: Helvetica; font-size: 10pt; color: #222; }
+  table { width: 100%; }
+  td { vertical-align: top; }
+
+  .encabezado td { vertical-align: middle; }
+  .empresa { text-align: right; color: #555; font-size: 10pt; line-height: 1.5; }
+
+  .titulo {
+    border: 3px double #999; padding: 8px 0 4px 0; margin-top: 30px;
+    text-align: center; font-size: 14pt; font-weight: bold;
+  }
+
+  .numero { margin-top: 18px; font-size: 10pt; }
+  .etiqueta { font-weight: bold; }
+  .valor { color: #444; }
+
+  .seccion { margin-top: 26px; font-weight: bold; font-size: 11pt; }
+  .caja { border: 1px solid #999; padding: 5px 5px 2px 5px; }
+  .caja-alta { height: 110px; }
+  .caja-media { height: 70px; }
+
+  .tilde { border: 1px solid #888; width: 11px; height: 11px; text-align: center;
+           font-size: 8pt; font-weight: bold; padding-top: 1px; color: #fff; }
+  .tilde-marcada { background-color: #777; color: #fff; }
+  .opcion { color: #888; padding-left: 5px; }
+  .opcion-marcada { color: #222; font-weight: bold; padding-left: 5px; }
+
+  .total { font-size: 13pt; font-weight: bold; }
+  .condiciones { margin-top: 60px; line-height: 1.6; }
+  .condiciones i { font-style: italic; }
+</style>
+</head>
+<body>
+
+  <table class="encabezado">
+    <tr>
+      <td><img src="{% static 'images/techos_valor_logo.png' %}" width="140"></td>
+      <td class="empresa">
+        Tel. (1):&nbsp;&nbsp;221 434-7167<br>
+        Tel. (2):&nbsp;&nbsp;221 505-5637<br>
+        (1900) La Plata - Pcia. de Bs. As.
+      </td>
+    </tr>
+  </table>
+
+  <div class="titulo">PRESUPUESTO</div>
+
+  <div class="numero"><span class="etiqueta">N° presupuesto:</span> P{{ presupuesto.pk }}</div>
+
+  <table style="margin-top: 14px;">
+    <tr>
+      <td class="etiqueta" width="14%">Cliente:</td>
+      <td class="valor" width="56%">{{ cliente.nombre }} {{ cliente.apellido }}</td>
+      <td class="etiqueta" width="12%">Fecha:</td>
+      <td class="valor" width="18%">{{ presupuesto.fecha_actual|date:"d/m/Y" }}</td>
+    </tr>
+    <tr>
+      <td class="etiqueta">Domicilio:</td>
+      <td class="valor">{{ obra.direccion }}{% if obra.zona %} - {{ obra.zona.localidad }}{% endif %}</td>
+      <td class="etiqueta">Tel.:</td>
+      <td class="valor">{{ cliente.telefono }}</td>
+    </tr>
+  </table>
+
+  <div class="seccion">INFORME</div>
+  <div class="caja">
+    <div class="etiqueta">Descripción del trabajo:</div>
+    <div style="margin-top: 4px;">{{ presupuesto.descripcion_impresa|linebreaksbr }}</div>
+    <table style="margin-top: 14px; width: 70%; margin-left: 60px;">
+      <tr>
+        {% for s in superficies %}
+          <td width="16px"><div class="tilde{% if s.pk == presupuesto.superficie_id %} tilde-marcada{% endif %}">X</div></td>
+          <td class="{% if s.pk == presupuesto.superficie_id %}opcion-marcada{% else %}opcion{% endif %}">{{ s.superficie }}</td>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+
+  <div class="seccion">DETALLE</div>
+  <div class="caja caja-alta">
+    <div class="total">El precio total es de&nbsp;&nbsp;$ {{ monto }}</div>
+  </div>
+
+  <div class="caja caja-media" style="margin-top: 50px;">
+    <div class="etiqueta">Observaciones:</div>
+    <div style="margin-top: 4px;">{{ presupuesto.observacion|linebreaksbr }}</div>
+  </div>
+
+  <div class="condiciones">
+    <i>Incluye todos los materiales necesarios y la mano de obra.</i><br>
+    <i>No incluye factura, el precio es en efectivo.</i><br>
+    Otros medios de pago tienen recargo.<br>
+    <i>Garantía escrita.</i><br>
+    <br>
+    50% para confirmar el presupuesto y el resto al finalizar la obra.
+  </div>
+
+</body>
+</html>
