@@ -10,7 +10,9 @@ from presupuestos.models import Presupuesto
 EXTRA_TAGS = 'obras_messages'
 
 def obras_total(request):
-    obras = Obra.objects.all().order_by('fecha_contacto')
+    # El template muestra cliente, zona y estado de cada obra: se traen con un JOIN
+    # en la misma consulta en vez de una consulta extra por obra.
+    obras = Obra.objects.select_related('cliente', 'zona', 'estado').order_by('fecha_contacto')
 
     search_input = request.GET.get('search', '').strip()
     if (search_input):
@@ -25,10 +27,16 @@ def obras_total(request):
 
 def obra_detalle(request, pk):
     try:
-        obra = Obra.objects.get(pk=pk)
-        presupuestos = Presupuesto.objects.filter(
+        obra = Obra.objects.select_related(
+            'cliente', 'zona', 'estado', 'proxima_accion', 'fecha_visita'
+        ).get(pk=pk)
+        presupuestos = list(Presupuesto.objects.filter(
             obra = obra
-        ).order_by('fecha_actual')
+        ).select_related('material', 'superficie').order_by('fecha_actual'))
+        # El detalle de cada presupuesto muestra datos de su obra: se reutiliza la
+        # obra que ya tenemos en vez de que cada presupuesto la vuelva a buscar.
+        for pres in presupuestos:
+            pres.obra = obra
 
         return render(request, 'obras/obra_detalle.html', {'obra': obra, 'presupuestos':presupuestos})
     except: # Si no encuentra la obra con el id ingresado como parámetro, retorna un template de not found.

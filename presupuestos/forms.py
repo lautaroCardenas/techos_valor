@@ -1,4 +1,5 @@
 from django import forms
+from obras.models import Obra
 from .models import Presupuesto
 
 class PresupuestoForm(forms.ModelForm):
@@ -18,3 +19,9 @@ class PresupuestoForm(forms.ModelForm):
         if precio_metro < 0:
             raise forms.ValidationError("El precio no puede ser menor a 0")
         return precio_metro
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # El texto de cada opción (Obra.__str__) usa cliente, zona y estado:
+        # se traen en la misma consulta para no hacer una por obra.
+        self.fields['obra'].queryset = Obra.objects.select_related('cliente', 'zona', 'estado')
