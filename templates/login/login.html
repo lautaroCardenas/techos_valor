@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/login.css' %}">
+{% endblock %}
 
 {% block title %}Ingresar{% endblock %}
 
@@ -7,38 +12,46 @@
 
 {% block content %}
 <section class="login">
-  <h1>Techos Valor</h1>
-  <p>Ingresá con tu email o usuario y tu contraseña.</p>
-
-  {% for message in messages %}
-  <p class="message message-{{ message.tags }}">{{ message }}</p>
-  {% endfor %}
-
-  <form method="post" action="{% url 'login:login' %}" novalidate>
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ next }}">
-
-    {% if form.non_field_errors %}
-    <div class="form-errors" role="alert">
-      {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="field">
-      <label for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
-      {{ form.usuario }}
-      {% for error in form.usuario.errors %}<small class="error">{{ error }}</small>{% endfor %}
+  <div class="login__container">
+    <div class="login__header">
+      <img class="login__header__logo" src="{% static 'images/techos_valor_logo.png' %}" alt="brands logo">
+      <h1 class="login__titulo">Iniciar sesión</h1>
+      <p class="login__subtitulo">Ingresá con tu email o usuario y tu contraseña.</p>
     </div>
 
-    <div class="field">
-      <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-      {{ form.password }}
-      {% for error in form.password.errors %}<small class="error">{{ error }}</small>{% endfor %}
-    </div>
+    {% for message in messages %}
+    <p class="message message-{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
 
-    <button type="submit">Ingresar</button>
-  </form>
+    <form class="login__form" method="post" action="{% url 'login:login' %}" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
 
-  <p>¿No tenés cuenta? <a href="{% url 'login:registro' %}">Registrate</a></p>
+      {% if form.non_field_errors %}
+      <div class="login__form__errors" role="alert">
+        {% for error in form.non_field_errors %}<p class="login__form__error">{{ error }}</p>{% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="login__field">
+        <label for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
+        {{ form.usuario }}
+        {% for error in form.usuario.errors %}<small class="login__error">{{ error }}</small>{% endfor %}
+      </div>
+
+      <div class="login__field">
+        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% for error in form.password.errors %}<small class="error">{{ error }}</small>{% endfor %}
+      </div>
+
+      <button class="login__btn" type="submit">Ingresar</button>
+    </form>
+    <div class="login__opciones">
+      <p>¿No tenés cuenta?</p>
+      <a href="{% url 'login:registro' %}" class="login__registro__link">Registrate</a>
+    </div> 
+  </div>
+
 </section>
 {% endblock %}

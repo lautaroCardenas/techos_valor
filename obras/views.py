@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Obra, FechaVisita
 from django.db.models import Q
+from django.contrib import messages
 from .forms import ObraForm, ClienteForm
 from presupuestos.models import Presupuesto
 
 # Create your views here.
+
+EXTRA_TAGS = 'obras_messages'
+
 def obras_total(request):
     # El template muestra cliente, zona y estado de cada obra: se traen con un JOIN
     # en la misma consulta en vez de una consulta extra por obra.
@@ -137,20 +141,52 @@ def cliente_crear(request):
 
 def obra_actualizar(request, pk):
     obra = get_object_or_404(Obra, pk=pk)
-    form = ObraForm(request.POST or None, instance=obra)
 
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('obras:obra_detalle', pk=obra.pk)
+    if request.method == 'POST':
+        obra_form = ObraForm(request.POST, instance=obra)
+        cliente_form = ClienteForm(request.POST, instance=obra.cliente)
 
-    return render(request, 'obras/obra_crear.html', {
+        obra_form.fields.pop('cliente') # Se van a editar los datos del cliente, no seleccionarlo de un desplegable.
+
+        if obra_form.is_valid() and cliente_form.is_valid():
+
+            cliente_form.save()
+
+            obra = obra_form.save(commit=False)
+
+            fecha = obra_form.cleaned_data.get('fecha_visita')
+
+            if fecha:
+                ultima_fecha = FechaVisita.objects.order_by('-numero').first()
+                nuevo_numero = ultima_fecha.numero + 1 if ultima_fecha else 1
+
+                fecha_visita = FechaVisita.objects.create(
+                    numero=nuevo_numero,
+                    fecha=fecha
+                )
+
+                obra.fecha_visita = fecha_visita
+            else:
+                obra.fecha_visita = None
+
+            obra.save()
+            obra_form.save_m2m()
+
+            messages.success(request, 'Obra actualizada exitosamente.', extra_tags=EXTRA_TAGS)
+
+            return redirect('obras:obra_detalle', pk=obra.pk)
+
+    else:
+        obra_form = ObraForm(instance=obra)
+        cliente_form = ClienteForm(instance=obra.cliente)
+
+        obra_form.fields.pop('cliente')
+
+    return render(request, 'obras/obra_actualizar.html', {
         'obra': obra,
-        'obra_form': form,
-        'cliente_form': ClienteForm(),
-        'abrir_modal_cliente': False,
-        'es_edicion': True,
+        'obra_form': obra_form,
+        'cliente_form': cliente_form
     })
-
 
 def guardar_obra_con_fecha(form):
     obra = form.save(commit=False)
@@ -174,3 +210,15 @@ def guardar_obra_con_fecha(form):
     form.save_m2m()
 
     return obra
+
+def obra_borrar(request, pk):
+    if request.method == 'POST':
+        obra = get_object_or_404(Obra, pk=pk)
+
+        if obra.presupuesto_set.exists():
+            messages.error(request, 'No se puede eliminar esta obra porque tiene presupuestos asociados', extra_tags=EXTRA_TAGS)
+        else:
+            obra.delete()
+            messages.success(request, 'Obra borrada exitosamente', extra_tags=EXTRA_TAGS)
+
+    return redirect('obras:obras_total')    

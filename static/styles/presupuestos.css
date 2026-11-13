@@ -57,18 +57,24 @@
   width: auto;
   /* min-width: 200px; */
 }
-.presupuestos__negocio {
+.presupuesto__negocio {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin: 0;
-  font-size: var(--fs-base);
+  margin-bottom: 0;
+  padding: 0.6rem var(--space-3);
+  font-size: 1rem;
   color: var(--text-color);
+  white-space: nowrap;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
+
 .presupuestos__negocio input {
-  width: 18px;
-  height: 18px;
+  width: 1.25rem;
+  height: 1.25rem;
   accent-color: var(--primary-color);
 }
 
@@ -98,6 +104,11 @@
 
 .presupuestos__btn__agregar {
   max-height: 3rem;
+}
+
+.presupuestos__btn {
+  max-width: 10rem;
+  justify-self: end;
 }
 
 .presupuestos__btn__svg {
@@ -332,7 +343,7 @@
 .presupuestonuevo__title {
   margin-bottom: var(--space-4);
   padding-right: 2.5rem;
-  font-size: var(--fs-xl);
+  /* font-size: var(--fs-xl); */
 }
 .presupuestonuevo__form {
   display: flex;
@@ -386,6 +397,115 @@
   display: none;
 }
 
+.presupuesto__btn__delete {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  background: transparent;
+  color: var(--danger-color);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.presupuesto__btn__delete:hover {
+  background-color: var(--danger-color);
+  color: var(--surface-color);
+}
+
+.presupuestos__btns {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  /* padding: 0.4rem 0.5rem 0.4rem 1.25rem; */
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-5);
+  color: var(--primary-color);
+  background: transparent;
+  border: 1.5px solid var(--primary-color);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+.presupuestos__btns:has(.presupuesto__btn:hover) {
+  color: #fff;
+  background-color: var(--primary-color);
+}
+
+.presupuestos__btns .presupuesto__btn {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-start;
+  padding: 0.4rem 0;
+  color: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.presupuestos__btns .presupuesto__btn:hover {
+  color: inherit;
+  background: transparent;
+}
+
+.modal__confirmacion {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: rgba(17, 17, 17, 0.6);
+}
+
+.modal__confirmacion[hidden] {
+  display: none;
+}
+
+.modal__confirmacion__contenido {
+  width: 100%;
+  max-width: 28rem;
+  padding: var(--space-4);
+  background: var(--surface-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 50px rgba(17, 24, 39, 0.3);
+}
+
+.modal__confirmacion__contenido h2 {
+  margin-bottom: var(--space-2);
+}
+
+.modal__confirmacion__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.modal__confirmacion__acciones button {
+  padding: 0.6rem 1rem;
+  font: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.modal__confirmacion__acciones #cancelar__borrar {
+  color: var(--text-color);
+  background: var(--surface-color);
+}
+
+.modal__confirmacion__acciones button[type="submit"] {
+  color: #fff;
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
 .presupuesto__modal__contenido {
   position: relative;
   width: 100%;
@@ -395,6 +515,7 @@
   padding: var(--space-4) var(--space-5) var(--space-5);
   background: var(--surface-color);
   border-radius: var(--radius-md);
+  color: var(--text-color);
   box-shadow: 0 20px 50px rgba(17, 24, 39, 0.3);
 }
 
@@ -592,24 +713,292 @@
   grid-column: 1 / -1;
 }
 
+/* presupuesto_detalle.html y actualizar. */
+.presupuestodetalle__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-right: var(--space-5);
+}
+
+.presupuestodetalle__header .presupuesto__titulo {
+  margin: 0;
+  padding: 0;
+}
+
+.presupuestodetalle__header__editar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  color: #fff;
+  background: var(--accent-color);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.presupuestodetalle__header__editar__btn:hover {
+  background: var(--accent-dark);
+}
+
+.presupuestodetalle__header__editar__btn svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.presupuesto__form__editar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Cada campo que genera as_p. */
+.presupuesto__form__editar p {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.presupuesto__form__editar label {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.presupuesto__form__editar input[type="text"],
+.presupuesto__form__editar input[type="number"],
+.presupuesto__form__editar input[type="date"],
+.presupuesto__form__editar select,
+.presupuesto__form__editar textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  background: var(--surface-color);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+.presupuesto__form__editar p:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.presupuesto__form__editar p:has(input[type="checkbox"]) label {
+  order: 2;
+  font-size: 1rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.presupuesto__form__editar .helptext {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.presupuesto__form__editar .errorlist {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--danger-color);
+}
+
+.presupuesto__form__editar .errorlist + input,
+.presupuesto__form__editar .errorlist + select,
+.presupuesto__form__editar .errorlist + textarea {
+  border-color: var(--danger-color);
+}
+
+.presupuesto__acciones__editar {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-color);
+}
+
+.presupuesto__cancelar__editar,
+.presupuestoactualizar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.presupuesto__cancelar__editar {
+  color: var(--text-color);
+  background: var(--surface-color);
+  border: 1.5px solid var(--border-color);
+}
+
+.presupuesto__cancelar__editar:hover {
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.presupuestoactualizar__btn {
+  color: #fff;
+  background: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
+  box-shadow: var(--shadow-card);
+}
+
+.presupuestoactualizar__btn:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
 @media (max-width: 768px) {
   .presupuestos {
-    padding: var(--space-3);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2);
+    overflow: hidden;
   }
+
+  .presupuestos__header {
+    width: 100%;
+    /* font-size: 1.25rem; */
+    flex-direction: column;
+    align-items: start;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .presupuestos__title {
+    font-size: 1.75rem;
+    text-align: start;
+  }
+
+  .presupuestos__subtitle {
+    margin-bottom: var(--space-4);
+  }
+
+  .presupuestos__btn__agregar {
+    width: 100%;
+    align-self: center;
+    padding: var(--space-3) 0.25rem;
+  }
+
+  .presupuestos__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .presupuestos__btn__text {
+    display: none;
+  }
+
+  .presupuestos__opciones {
+    width: 100%;
+  }
+
   .presupuestos__opciones {
     flex-direction: column;
   }
+
+  .presupuestos__filtros {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-1);
+  }
+
+  .presupuestos__mostrar {
+    margin-top: var(--space-3);
+  }
   .presupuestos__select {
     width: 100%;
+  }
+
+  .presupuestos__btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem var(--space-2);
   }
   .presupuesto__tarjeta {
     flex-direction: column;
   }
   .presupuesto__modal__contenido,
   .obra__modal__contentido {
+    max-height: 100%;
     padding: var(--space-3);
   }
   .presupuesto__dato strong {
     min-width: 100%;
+  }
+
+  .presupuesto__acciones__editar {
+    flex-direction: column-reverse;
+  }
+
+  .presupuesto__cancelar__editar,
+  .presupuestoactualizar__btn {
+    width: 100%;
+  }
+  .presupuesto__modal,
+  .obra__modal,
+  .modal__confirmacion {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .presupuesto__detalle {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .presupuestodetalle__header {
+    align-items: start;
+  }
+  .presupuesto__meta {
+    align-items: start;
+  }
+  .presupuesto__cabecera {
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: start;
+  }
+  .presupuesto__resumen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .presupuesto__tarjeta {
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+  }
+  .presupuesto__seccion {
+    align-self: start;
+    margin: var(--space-5) 0rem;
   }
 }

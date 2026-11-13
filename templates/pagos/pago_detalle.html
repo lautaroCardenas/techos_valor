@@ -96,6 +96,7 @@
                             {% if obra.negocio %}
                                 <th scope="col" class="pagodetalle__tabla__num">Monto comisión</th>
                             {% endif %}
+                            <th scope="col" class="pagodetalle__tabla__accion"><span class="sr-only">Acciones</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,7 +112,19 @@
                                 {% if obra.negocio %}
                                     <td data-label="Monto comisión" class="pagodetalle__tabla__num">${{ p.comision_monto|floatformat:2 }}</td>
                                 {% endif %}
+                                <td  class="pagodetalle__tabla__num">
+                                    {% if forloop.last %}
+                                        <form method="POST" action="{% url 'pagos:pago_borrar' p.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="pagos__btn__delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="12;0"/></path></svg>
+                                            </button>  
+                                        </form>
+                                    {% endif %}
+                                </td>
+                                
                             </tr>
+                            
                         {% endfor %}
                     </tbody>
                 </table>

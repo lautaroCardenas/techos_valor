@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/obras.css' %}">
+<link rel="stylesheet" href="{% static 'styles/presupuestos.css' %}">
+{% endblock %}
+
+{% block title %}Editar obra{% endblock %}
+
+{% block content %}
+<section class="obradetalle">
+    <div class="obradetalle__container obraactualizar__container">
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="obradetalle__header">
+
+                <svg class="obradetalle__header__svg"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24" width="24" height="24">
+                    <g fill="none" stroke="#ffffff"
+                        stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2">
+                        <path d="M12 13a3 3 0 1 0 0-6a3 3 0 0 0 0 6"/>
+                        <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9-9 9s-9-1.8-9-9s1.8-9 9-9"/>
+                        <path d="M6 20.05V20a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v.05"/>
+                    </g>
+                </svg>
+
+                <div class="obradetalle__cliente">
+
+                    <div class="obradetalle__campo-header">
+                        {{ cliente_form.nombre.label_tag }}
+                        {{ cliente_form.nombre }}
+                        {{ cliente_form.nombre.errors }}
+                    </div>
+
+                    <div class="obradetalle__campo-header">
+                        {{ cliente_form.apellido.label_tag }}
+                        {{ cliente_form.apellido }}
+                        {{ cliente_form.apellido.errors }}
+                    </div>
+
+                    <div class="obradetalle__campo-header">
+                        {{ obra_form.direccion.label_tag }}
+                        {{ obra_form.direccion }}
+                        {{ obra_form.direccion.errors }}
+                    </div>
+
+                    <div class="obradetalle__campo-header">
+                        {{ obra_form.zona.label_tag }}
+                        {{ obra_form.zona }}
+                        {{ obra_form.zona.errors }}
+                    </div>
+
+                    <div class="obradetalle__campo-header">
+                        {{ cliente_form.telefono.label_tag }}
+                        {{ cliente_form.telefono }}
+                        {{ cliente_form.telefono.errors }}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="obradetalle__contenido">
+
+                <div class="obradetalle__data">
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Fecha de contacto
+                        </p>
+                        <p class="obradetalle__data__valor">
+                            {{ obra.fecha_contacto }}
+                        </p>
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Fecha de visita
+                        </p>
+                        {{ obra_form.fecha_visita }}
+                        {{ obra_form.fecha_visita.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Estado
+                        </p>
+                        {{ obra_form.estado }}
+                        {{ obra_form.estado.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Próxima acción
+                        </p>
+                        {{ obra_form.proxima_accion }}
+                        {{ obra_form.proxima_accion.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Garantía
+                        </p>
+                        {{ obra_form.garantia }}
+                        {{ obra_form.garantia.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Observación
+                        </p>
+                        {{ obra_form.observacion }}
+                        {{ obra_form.observacion.errors }}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="obradetalle__acciones">
+
+                <button type="submit" class="obraactualizar__btn">
+                    Guardar cambios
+                </button>
+
+                <a href="{% url 'obras:obra_detalle' obra.pk %}" class="obraactualizar__btn__cancelar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+    </div>
+</section>
+{% endblock %}

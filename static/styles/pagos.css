@@ -49,8 +49,8 @@
 }
 
 .pagos__negocio__input {
-  width: 18px;
-  height: 18px;
+  width: 1.25rem;
+  height: 1.25rem;
   accent-color: var(--primary-color);
   cursor: pointer;
 }
@@ -588,13 +588,72 @@
   background-color: var(--primary-dark);
 }
 
+.pagodetalle__tabla .pagodetalle__tabla__accion {
+  width: 1%;
+  text-align: right;
+}
+
+.pagodetalle__tabla__accion form {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+}
+
+.pagos__btn__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--danger-color);
+  background: transparent;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.pagos__btn__delete:hover {
+  color: var(--surface-color);
+  background-color: var(--danger-color);
+}
+
+.pagos__btn__delete svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
 @media (max-width: 768px) {
   .pagos {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2);
+    overflow: hidden;
     padding: var(--space-3);
   }
 
+  .pagos__header {
+    margin-top: var(--space-3);
+  }
+
+  .pagos__title {
+    font-size: 1.75rem;
+    text-align: start;
+  }
+
+  .pagos__btn__text {
+    display: none;
+  }
   .pagos__form {
     flex-wrap: wrap;
+  }
+
+  .pagos__negocio {
+    flex: 1;
   }
 
   .pagos__input {
@@ -604,6 +663,18 @@
   .pagos__panel {
     grid-template-columns: 1fr;
     margin-top: var(--space-4);
+  }
+
+  .pagodetalle {
+    padding: var(--space-5) var(--space-2);
+  }
+
+  .pagodetalle__titulo {
+    font-size: 1.5rem;
+  }
+
+  .pagodetalle__obra {
+    padding: var(--space-2);
   }
 
   .pagodetalle__monto {
