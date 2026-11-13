@@ -33,31 +33,31 @@
                     <div class="obradetalle__campo-header">
                         {{ cliente_form.nombre.label_tag }}
                         {{ cliente_form.nombre }}
-                        {{ cliente_form.nombre.errors }}
+                        <p class="obra__error">{{ cliente_form.nombre.errors }}</p> 
                     </div>
 
                     <div class="obradetalle__campo-header">
                         {{ cliente_form.apellido.label_tag }}
                         {{ cliente_form.apellido }}
-                        {{ cliente_form.apellido.errors }}
+                        <p class="obra__error">{{ cliente_form.apellido.errors }}</p> 
                     </div>
 
                     <div class="obradetalle__campo-header">
                         {{ obra_form.direccion.label_tag }}
                         {{ obra_form.direccion }}
-                        {{ obra_form.direccion.errors }}
+                        <p class="obra__error">{{ obra_form.direccion.errors }}</p>
                     </div>
 
                     <div class="obradetalle__campo-header">
                         {{ obra_form.zona.label_tag }}
                         {{ obra_form.zona }}
-                        {{ obra_form.zona.errors }}
+                        <p class="obra__error">{{ obra_form.zona.errors }}</p>
                     </div>
 
                     <div class="obradetalle__campo-header">
                         {{ cliente_form.telefono.label_tag }}
                         {{ cliente_form.telefono }}
-                        {{ cliente_form.telefono.errors }}
+                        <p class="obra__error">{{ cliente_form.telefono.errors }}</p>
                     </div>
 
                 </div>

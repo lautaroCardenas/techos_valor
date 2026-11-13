@@ -280,10 +280,20 @@ textarea:focus {
 
 .errorlist {
   margin: 0 0 var(--space-1);
-  padding: 0;
   list-style: none;
-  font-size: var(--fs-sm);
+  padding: var(--space-2);
+  font-size: 1rem;
   color: var(--danger-color);
+  background-color: #c0847d4f;
+  border-radius: 1rem;
+}
+
+.error {
+  padding: var(--space-2);
+  font-size: 1rem;
+  color: var(--danger-color);
+  background-color: #c0847d4f;
+  border-radius: 1rem;
 }
 
 @media (max-width: 1024px) {

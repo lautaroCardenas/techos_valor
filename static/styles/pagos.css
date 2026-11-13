@@ -465,6 +465,11 @@
   background: var(--primary-color);
 }
 
+.cerrar__pagos__btn {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 .pago-modal {
   width: min(32rem, calc(100% - 2rem));
   max-height: calc(100vh - 2rem);

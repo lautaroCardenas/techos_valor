@@ -12,14 +12,22 @@
 }
 
 .ajustes__title {
-  /* font-size: 3rem; */
   font-weight: 700;
 }
 
 .ajustes__subtitle {
   margin-top: var(--space-2);
-  /* font-size: 1.5rem; */
   color: var(--text-muted);
+}
+
+.ajustes__mensaje,
+.ajustes__mensaje .ajustes_messages .success {
+  padding: var(--space-2);
+  margin: var(--space-3) 0;
+  font-size: 1rem;
+  color: var(--success-color);
+  background-color: #97fbae6d;
+  border-radius: 1rem;
 }
 
 .ajustes__panel {

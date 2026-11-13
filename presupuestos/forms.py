@@ -7,6 +7,19 @@ class PresupuestoForm(forms.ModelForm):
         model = Presupuesto
         fields = ['metro_2', 'precio_metro', 'material', 'superficie', 'obra', 'observacion', 'recargo_porcentaje', 'descripcion_impresa', 'aceptado']
 
+    def clean_metro_2(self):
+        metro_2 = self.cleaned_data.get('metro_2')
+        if metro_2 <= 0:
+            raise forms.ValidationError("Los metros no pueden ser valores negativos")
+        return metro_2
+
+    def clean_precio_metro(self):
+        precio_metro = self.cleaned_data.get('precio_metro')
+
+        if precio_metro < 0:
+            raise forms.ValidationError("El precio no puede ser menor a 0")
+        return precio_metro
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # El texto de cada opción (Obra.__str__) usa cliente, zona y estado:

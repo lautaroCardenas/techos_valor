@@ -19,7 +19,8 @@ def obras_total(request):
         obras = obras.filter(
             Q(cliente__nombre__icontains=search_input) | 
             Q(cliente__apellido__icontains=search_input) |
-            Q(direccion__icontains=search_input)
+            Q(direccion__icontains=search_input) |
+            Q(zona__localidad__icontains=search_input)
         )
 
     return render(request, 'obras/obras.html', {'obras': obras, 'search_input': search_input})
@@ -68,6 +69,12 @@ def obra_crear(request):
                 if request.POST.get("origen") == "presupuestos":
                     request.session["abrir_modal_presupuesto"] = True
                 return redirect("presupuestos:presupuestos_total")
+            else:
+                if request.POST.get("origen") == "presupuestos":
+                    request.session["obra_pendiente"] = request.POST.dict()
+                    request.session["abrir_modal_obra"] = True
+
+                    return redirect("presupuestos:presupuestos_total")
         else:
             datos_obra = request.session.pop("obra_pendiente", {})
             form = ObraForm(initial=datos_obra)
@@ -131,6 +138,14 @@ def cliente_crear(request):
                 "proxima_accion", "fecha_visita",
             ]
         }
+        request.session["cliente_pendiente"] = request.POST.dict()
+
+        if request.POST.get("origen") == "presupuestos":
+            request.session["abrir_modal_cliente"] = True
+            request.session["abrir_modal_obra"] = True
+            request.session["abrir_modal_presupuesto"] = True
+            return redirect("presupuestos:presupuestos_total")
+
         return render(request, "obras/obra_crear.html", {
             "obra_form": ObraForm(initial=datos_obra),
             "cliente_form": form_cliente,

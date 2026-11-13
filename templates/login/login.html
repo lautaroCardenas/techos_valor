@@ -19,24 +19,14 @@
       <p class="login__subtitulo">Ingresá con tu email o usuario y tu contraseña.</p>
     </div>
 
-    {% for message in messages %}
-    <p class="message message-{{ message.tags }}">{{ message }}</p>
-    {% endfor %}
-
     <form class="login__form" method="post" action="{% url 'login:login' %}" novalidate>
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ next }}">
 
-      {% if form.non_field_errors %}
-      <div class="login__form__errors" role="alert">
-        {% for error in form.non_field_errors %}<p class="login__form__error">{{ error }}</p>{% endfor %}
-      </div>
-      {% endif %}
-
       <div class="login__field">
         <label for="{{ form.usuario.id_for_label }}">{{ form.usuario.label }}</label>
         {{ form.usuario }}
-        {% for error in form.usuario.errors %}<small class="login__error">{{ error }}</small>{% endfor %}
+        {% for error in form.usuario.errors %}<small class="error">{{ error }}</small>{% endfor %}
       </div>
 
       <div class="login__field">
@@ -45,8 +35,19 @@
         {% for error in form.password.errors %}<small class="error">{{ error }}</small>{% endfor %}
       </div>
 
+      {% if form.non_field_errors %}
+      <div class="login__form__errors" role="alert">
+        {% for error in form.non_field_errors %}<p class="error">{{ error }}</p>{% endfor %}
+      </div>
+      {% endif %}
+
       <button class="login__btn" type="submit">Ingresar</button>
     </form>
+
+    {% for message in messages %}
+      <p class="message message-{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+
     <div class="login__opciones">
       <p>¿No tenés cuenta?</p>
       <a href="{% url 'login:registro' %}" class="login__registro__link">Registrate</a>

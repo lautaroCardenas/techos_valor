@@ -16,8 +16,31 @@
             value="{{ presupuesto.pk }}"
         >
 
-        {{ form_pago.as_p }}
+        
+        {% for field in form_pago %}
+            <div class="pagonuevo__campo">
 
+                {{ field.label_tag }}
+                {{ field }}
+
+                {% if field.errors %}
+                    <div class="pagonuevo__error">
+                        {% for error in field.errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+
+        {% if form_pago.non_field_errors %}
+            <div class="pagonuevo__error">
+                {% for error in form_pago.non_field_errors %}
+                    <p class="error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <button type="submit" class="pagonuevo__btn">
             Agregar pago
         </button>
