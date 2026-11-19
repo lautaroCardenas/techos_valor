@@ -151,6 +151,106 @@
   background-color: var(--primary-dark);
 }
 
+/* Encabezado con un botón a la derecha (Ajustes y PDF del presupuesto). */
+.ajustes__header--acciones {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+a.ajustes__btn {
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ajustes__btn--secundario {
+  color: var(--primary-color);
+  background-color: var(--surface-color);
+  border: 1px solid var(--primary-color);
+}
+
+.ajustes__btn--secundario:hover {
+  color: var(--bg-color);
+}
+
+.ajustes__volver {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.ajustes__volver:hover {
+  color: var(--primary-color);
+}
+
+/* Configuración del PDF */
+.ajustes__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-color);
+  border-radius: var(--radius-md);
+}
+
+.ajustes__logo img {
+  max-width: 160px;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.ajustes__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ajustes__campo label {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.ajustes__campo input[type="text"],
+.ajustes__campo textarea {
+  width: 100%;
+  padding: var(--space-2);
+  font-family: inherit;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+.ajustes__campo textarea {
+  resize: vertical;
+}
+
+.ajustes__campo--check label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.ajustes__campo--check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--primary-color);
+}
+
+.ajustes__campo__error {
+  color: var(--danger-color);
+}
+
+.ajustes__pdf__guardar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
 @media (max-width: 768px) {
   .ajustes {
     width: 100%;

@@ -9,13 +9,16 @@
 
 {% block content %}
 <section class="ajustes">
-  <div class="ajustes__header">
-    <h1 class="ajustes__title">
-        Ajustes
-    </h1>
-    <p class="ajustes__subtitle">
-        Seccion para modificar los datos estándares.
-    </p>
+  <div class="ajustes__header ajustes__header--acciones">
+    <div>
+      <h1 class="ajustes__title">
+          Ajustes
+      </h1>
+      <p class="ajustes__subtitle">
+          Seccion para modificar los datos estándares.
+      </p>
+    </div>
+    <a href="{% url 'ajustes:ajustes_pdf' %}" class="ajustes__btn">PDF del presupuesto</a>
   </div>
 
   <div class="ajustes__mensajes">

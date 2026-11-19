@@ -1,5 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ZonaForm, ProximaAccionForm, EstadoObraForm, MaterialForm, SuperficieForm
+from .forms import ZonaForm, ProximaAccionForm, EstadoObraForm, MaterialForm, SuperficieForm, ConfiguracionPDFForm
+from .models import ConfiguracionPDF
+from django.http import HttpResponse
+from django.utils import timezone
+from obras.models import Cliente, Obra
+from presupuestos.models import Presupuesto
+from presupuestos.pdf import generar_pdf_presupuesto
 from django.contrib import messages
 from obras.models import Zona, ProximaAccion, EstadoObra
 from presupuestos.models import Material, Superficie
@@ -115,3 +121,47 @@ def ajustes_borrar(request, tipo, pk):
         )
 
     return redirect('ajustes:ajustes')
+
+
+def ajustes_pdf(request):
+    config = ConfiguracionPDF.obtener()
+
+    if request.method == 'POST':
+        form = ConfiguracionPDFForm(request.POST, request.FILES, instance=config)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'La configuración del PDF se guardó correctamente.', extra_tags=EXTRA_TAGS)
+            return redirect('ajustes:ajustes_pdf')
+        messages.error(request, 'Revisá los datos marcados.', extra_tags=EXTRA_TAGS)
+    else:
+        form = ConfiguracionPDFForm(instance=config)
+
+    return render(request, 'ajustes/pdf.html', {'form': form, 'config': config})
+
+
+def ajustes_pdf_vista_previa(request):
+    """El PDF con la configuración guardada, usando el último presupuesto (o uno de ejemplo)."""
+    pres = Presupuesto.objects.select_related(
+        'material', 'superficie', 'obra__cliente', 'obra__zona'
+    ).order_by('-pk').first()
+
+    if pres is None:
+        # Sin presupuestos cargados: uno de ejemplo que no se guarda en la base.
+        pres = Presupuesto(
+            pk=0, metro_2=100, precio_metro=48600, monto=4860000, recargo_porcentaje=0,
+            material=Material(material='Membrana'),
+            descripcion_impresa='Ejemplo de descripción del trabajo.',
+            observacion='Ejemplo de observaciones.',
+            obra=Obra(
+                direccion='455 y 132', zona=Zona(localidad='La Plata'),
+                cliente=Cliente(nombre='Cliente', apellido='de ejemplo', telefono='221 000-0000'),
+            ),
+        )
+        pres.fecha_actual = timezone.now()
+
+    pdf = generar_pdf_presupuesto(pres)
+    if pdf is None:
+        return HttpResponse('No se pudo generar la vista previa del PDF.', status=500)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="vista-previa.pdf"'
+    return response

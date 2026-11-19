@@ -5,6 +5,9 @@ from django.db.models import Q, Count, Prefetch
 from obras.models import Obra, ProximaAccion, EstadoObra
 from obras.forms import ObraForm, ClienteForm
 from .forms import PresupuestoForm
+from django.http import HttpResponse
+from django.utils.text import slugify
+from .pdf import generar_pdf_presupuesto
 
 # Create your views here.
 EXTRA_TAG = 'presupuestos_messages'
@@ -183,3 +186,19 @@ def presupuesto_editar_form(request, pk):
         'pres': pres,
         'presupuesto_form': presupuesto_form
     })
+
+def presupuesto_pdf(request, pk):
+    pres = get_object_or_404(
+        Presupuesto.objects.select_related('material', 'superficie', 'obra__cliente', 'obra__zona'),
+        pk=pk,
+    )
+    pdf = generar_pdf_presupuesto(pres)
+    if pdf is None:
+        return HttpResponse('No se pudo generar el PDF del presupuesto.', status=500)
+
+    cliente = pres.obra.cliente
+    nombre = slugify(f'presupuesto P{pres.pk} {cliente.nombre} {cliente.apellido}')
+    response = HttpResponse(pdf, content_type='application/pdf')
+    # inline: se abre en una pestaña del navegador, desde donde se puede descargar o imprimir.
+    response['Content-Disposition'] = f'inline; filename="{nombre}.pdf"'
+    return response

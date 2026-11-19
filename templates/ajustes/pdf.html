@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/ajustes.css' %}">
+{% endblock %}
+
+{% block title %}PDF del presupuesto{% endblock %}
+
+{% block content %}
+<section class="ajustes">
+  <div class="ajustes__header ajustes__header--acciones">
+    <div>
+      <a href="{% url 'ajustes:ajustes' %}" class="ajustes__volver">&larr; Ajustes</a>
+      <h1 class="ajustes__title">PDF del presupuesto</h1>
+      <p class="ajustes__subtitle">
+        Cómo se ve el PDF que se le envía al cliente. Los cambios se aplican a todos los presupuestos.
+      </p>
+    </div>
+    <a href="{% url 'ajustes:ajustes_pdf_vista_previa' %}" target="_blank" rel="noopener" class="ajustes__btn ajustes__btn--secundario">
+      Ver vista previa
+    </a>
+  </div>
+
+  {% if messages %}
+    <div class="ajustes__mensajes">
+      {% for message in messages %}
+        {% if 'ajustes_messages' in message.tags %}
+          <p class="ajustes__mensaje {{ message.tags }}">{{ message }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data" class="ajustes__pdf">
+    {% csrf_token %}
+
+    <div class="ajustes__panel">
+      <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">Encabezado</h3>
+
+        <div class="ajustes__logo">
+          <img src="{% if config.logo %}{{ config.logo_data_uri }}{% else %}{% static 'images/techos_valor_logo.png' %}{% endif %}" alt="Logo actual">
+          <span class="ajustes__vacio">{% if config.logo %}Logo personalizado{% else %}Logo de Techos Valor{% endif %}</span>
+        </div>
+
+        <div class="ajustes__form">
+          {% include 'ajustes/_campo.html' with campo=form.logo_nuevo %}
+          {% if config.logo %}
+            {% include 'ajustes/_campo.html' with campo=form.quitar_logo check=True %}
+          {% endif %}
+          {% include 'ajustes/_campo.html' with campo=form.encabezado %}
+          {% include 'ajustes/_campo.html' with campo=form.titulo %}
+          {% include 'ajustes/_campo.html' with campo=form.prefijo_numero %}
+        </div>
+      </div>
+
+      <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">Qué mostrar</h3>
+        <div class="ajustes__form">
+          {% include 'ajustes/_campo.html' with campo=form.mostrar_telefono_cliente check=True %}
+          {% include 'ajustes/_campo.html' with campo=form.mostrar_localidad check=True %}
+          {% include 'ajustes/_campo.html' with campo=form.mostrar_superficies check=True %}
+          {% include 'ajustes/_campo.html' with campo=form.mostrar_desglose check=True %}
+          {% include 'ajustes/_campo.html' with campo=form.mostrar_observaciones check=True %}
+        </div>
+      </div>
+
+      <div class="ajustes__item">
+        <h3 class="ajustes__item__titulo">Condiciones</h3>
+        <div class="ajustes__form">
+          {% include 'ajustes/_campo.html' with campo=form.condiciones %}
+        </div>
+      </div>
+    </div>
+
+    <div class="ajustes__pdf__guardar">
+      <button type="submit" class="ajustes__btn">Guardar configuración</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

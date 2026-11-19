@@ -2,9 +2,15 @@
             <h2 class="presupuesto__titulo">
                 Presupuesto {{ forloop.counter }}
             </h2> 
-            <button type="button" class="presupuestodetalle__header__editar__btn" data-editar-presupuesto="{{ presupuesto.pk }}">         
+            <div class="presupuestodetalle__acciones">
+            <a href="{% url 'presupuestos:presupuesto_pdf' presupuesto.pk %}" target="_blank" rel="noopener" class="presupuestodetalle__header__pdf__btn" title="Ver PDF del presupuesto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2M12 11v6m-3-3l3 3l3-3"/></g></svg>
+                <span>PDF</span>
+            </a>
+            <button type="button" class="presupuestodetalle__header__editar__btn" data-editar-presupuesto="{{ presupuesto.pk }}" title="Editar presupuesto">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m16.475 5.408l2.117 2.117m-.756-3.982L12.109 9.27a2.1 2.1 0 0 0-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 1 0-2.621-2.621"/><path d="M19 15v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3"/></g></svg>    
             </button>
+            </div>
         </div>
 
         <header class="presupuesto__cabecera">
