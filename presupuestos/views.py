@@ -159,7 +159,7 @@ def presupuesto_editar_form(request, pk):
 
 def presupuesto_pdf(request, pk):
     pres = get_object_or_404(
-        Presupuesto.objects.select_related('superficie', 'obra__cliente', 'obra__zona'),
+        Presupuesto.objects.select_related('material', 'superficie', 'obra__cliente', 'obra__zona'),
         pk=pk,
     )
     pdf = generar_pdf_presupuesto(pres)

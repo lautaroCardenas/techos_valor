@@ -1,3 +1,4 @@
+import base64
 from decimal import Decimal
 
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -84,3 +85,75 @@ class Configuracion(models.Model):
     def obtener(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+ENCABEZADO_PDF_DEFAULT = (
+    "Tel. (1):  221 434-7167\n"
+    "Tel. (2):  221 505-5637\n"
+    "(1900) La Plata - Pcia. de Bs. As."
+)
+
+CONDICIONES_PDF_DEFAULT = (
+    "*Incluye todos los materiales necesarios y la mano de obra.*\n"
+    "*No incluye factura, el precio es en efectivo.*\n"
+    "Otros medios de pago tienen recargo.\n"
+    "*Garantía escrita.*\n"
+    "\n"
+    "50% para confirmar el presupuesto y el resto al finalizar la obra."
+)
+
+
+class ConfiguracionPDF(models.Model):
+    """Cómo se ve el PDF de los presupuestos. Existe un único registro (pk = 1)."""
+
+    # El logo se guarda en la base (no como archivo) para que no se pierda al
+    # hacer deploy en hostings que borran los archivos subidos.
+    logo = models.BinaryField("logo", null=True, blank=True, editable=False)
+    logo_tipo = models.CharField(max_length=50, blank=True, editable=False)
+
+    encabezado = models.TextField(
+        "datos de la empresa", blank=True, default=ENCABEZADO_PDF_DEFAULT,
+        help_text="Se muestran arriba a la derecha. Una línea por renglón.")
+    titulo = models.CharField("título", max_length=60, default="PRESUPUESTO")
+    prefijo_numero = models.CharField(
+        "prefijo del número", max_length=10, blank=True, default="P",
+        help_text='Va delante del número de presupuesto, por ejemplo "P" para P486.')
+
+    mostrar_telefono_cliente = models.BooleanField("mostrar teléfono del cliente", default=True)
+    mostrar_localidad = models.BooleanField("mostrar localidad junto al domicilio", default=True)
+    mostrar_superficies = models.BooleanField(
+        "mostrar casillas de superficie", default=True,
+        help_text="Las opciones (Chapa, Losa...) con la del presupuesto marcada.")
+    mostrar_desglose = models.BooleanField(
+        "mostrar desglose del precio", default=False,
+        help_text="Material, m², precio por m² y recargo, además del total.")
+    mostrar_observaciones = models.BooleanField("mostrar observaciones", default=True)
+
+    condiciones = models.TextField(
+        "condiciones / pie", blank=True, default=CONDICIONES_PDF_DEFAULT,
+        help_text="Se muestran al final. Escribí una línea entre *asteriscos* para ponerla en cursiva.")
+
+    actualizado = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "configuración del PDF"
+        verbose_name_plural = "configuración del PDF"
+
+    def __str__(self):
+        return "Configuración del PDF"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def obtener(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    @property
+    def logo_data_uri(self):
+        """El logo como data URI para usarlo en <img src> (en la página y en el PDF)."""
+        if not self.logo:
+            return ""
+        return f"data:{self.logo_tipo};base64,{base64.b64encode(bytes(self.logo)).decode()}"
