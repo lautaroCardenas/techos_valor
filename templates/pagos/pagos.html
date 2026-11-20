@@ -33,7 +33,7 @@
   <div class="pagos__panel">
     {% if presupuestos %}
       {% for p in presupuestos %}
-        <a href="{% url 'pagos:pago_detalle' p.obra.pk %}" class="pagos__obra__link">
+        <a href="{% url 'pagos:pago_detalle' p.obra.pk p.pk %}" class="pagos__obra__link">
           <div class="pagos__obra">
             <div class="pagos__obra__header">
               <h3 class="pagos__obra__titulo">

@@ -45,18 +45,19 @@ def pagos_total(request):
 
     return render(request, 'pagos/pagos.html', {'pagos': pagos, 'presupuestos': presupuestos, 'search_input': search_input, 'negocio_filter': negocio_filter})
 
-def pago_detalle(request, pk):
+def pago_detalle(request, obra_pk, presupuesto_pk):
     try:
         obra = get_object_or_404(
-            Obra.objects.select_related('cliente'), pk=pk
+            Obra.objects.select_related('cliente', 'zona'), pk=obra_pk
         )
 
-        presupuesto = Presupuesto.objects.filter(
-            obra = obra, aceptado=True
-        ).order_by('-fecha_actual').first()
+        presupuesto = get_object_or_404(Presupuesto, pk=presupuesto_pk, obra=obra, aceptado=True)
 
         # pagos = Pagos.objects.none()
-        pagos = Pagos.objects.all()
+        pagos = Pagos.objects.filter(
+            presupuesto=presupuesto
+        ).order_by('numero')
+
         form_pago = PagosForm(presupuesto=presupuesto)
 
         if presupuesto:
@@ -87,7 +88,7 @@ def pago_crear(request):
         
         if form_pago.is_valid():
             form_pago.save()
-            return redirect('pagos:pago_detalle', pk=presupuesto.obra_id)
+            return redirect('pagos:pago_detalle', obra_pk=presupuesto.obra_id, presupuesto_pk=presupuesto.pk)
 
         obra = presupuesto.obra
         pagos = Pagos.objects.filter(
@@ -107,15 +108,16 @@ def pago_borrar(request, pk):
     if request.method == 'POST':
         pago = get_object_or_404(Pagos, pk=pk)
 
-        obra_id = pago.presupuesto.obra_id
+        # obra_id = pago.presupuesto.obra_id
+        presupuesto = pago.presupuesto
 
         ultimo_pago = Pagos.objects.filter(
-            presupuesto=pago.presupuesto
+            presupuesto=presupuesto
         ).order_by('-numero').first()
 
         if ultimo_pago and ultimo_pago.pk == pago.pk:
             pago.delete()
 
-        return redirect('pagos:pago_detalle', pk=obra_id)
+        return redirect('pagos:pago_detalle', obra_pk=presupuesto.obra_id, presupuesto_pk=presupuesto.pk)
 
     return redirect('pagos:pagos_total')
