@@ -16,7 +16,7 @@ def presupuestos_total(request):
     # presupuestos = Presupuesto.objects.all().order_by('fecha_actual')
     obras = Obra.objects.annotate(
         cant_presupuestos=Count('presupuesto', distinct=True)
-    ).order_by('id')
+    ).filter(cant_presupuestos__gt=0).order_by('id')
 
     search_input = request.GET.get('search', '').strip()
     if search_input:

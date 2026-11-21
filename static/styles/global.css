@@ -17,6 +17,8 @@
   --danger-color: #c0392b;
   --danger-dark: #962f23;
   --success-color: #28a745;
+  --success-light: rgba(40, 167, 69, 0.08);
+  --success-dark: #1e7e34;
 
   --font-main: "Poppins", "Segoe UI", sans-serif;
   --font-heading: "Poppins", "Segoe UI", sans-serif;
