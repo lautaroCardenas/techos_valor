@@ -1,5 +1,6 @@
 from django.db import models
 from servicios.validadores import solo_letras, valores_positivos
+from django.utils import timezone
 
 # Create your models here.
 
@@ -42,6 +43,11 @@ class Obra(models.Model):
     proxima_accion = models.ForeignKey(ProximaAccion, on_delete=models.SET_NULL, null=True, blank=True)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
+
+    @property # Propiedad que no se traduce en la BD.
+    def finalizada(self):
+        return (self.fecha_fin is not None and self.fecha_fin <= timezone.localdate())
+   
 
     class Meta:
         ordering = ["cliente", "fecha_contacto"]

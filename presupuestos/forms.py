@@ -5,7 +5,7 @@ from .models import Presupuesto
 class PresupuestoForm(forms.ModelForm):
     class Meta:
         model = Presupuesto
-        fields = ['metro_2', 'precio_metro', 'material', 'superficie', 'obra', 'observacion', 'recargo_porcentaje', 'descripcion_impresa', 'aceptado']
+        fields = ['metro_2', 'precio_metro', 'material', 'superficie', 'obra', 'observacion', 'recargo_porcentaje', 'descripcion_impresa', 'aceptado', 'utilizado']
 
     def clean_metro_2(self):
         metro_2 = self.cleaned_data.get('metro_2')
@@ -19,6 +19,19 @@ class PresupuestoForm(forms.ModelForm):
         if precio_metro < 0:
             raise forms.ValidationError("El precio no puede ser menor a 0")
         return precio_metro
+
+    def clean (self):
+        cleaned_data = super().clean()
+        aceptado = self.cleaned_data.get('aceptado')
+        utilizado = self.cleaned_data.get('utilizado')
+
+        if utilizado and not aceptado:
+            self.add_error(
+                'utilizado',
+                'No se puede utilizar un presupuesto que no fue aceptado.'
+            )
+
+        return cleaned_data
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

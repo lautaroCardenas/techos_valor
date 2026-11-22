@@ -5,10 +5,20 @@ from django.contrib import messages
 from .forms import ObraForm, ClienteForm, FechaVisitaFormSet
 from presupuestos.models import Presupuesto
 from django.db import transaction
+from django.utils import timezone
 
 # Create your views here.
 
 EXTRA_TAGS = 'obras_messages'
+
+def obra_finalizada(obra):
+    if obra.fecha_fin and obra.fecha_fin <= timezone.localdate():
+       obra_completada = True
+       
+    else:
+        obra_completada = False
+    return obra_completada
+        
 
 def obras_total(request):
     # El template muestra cliente, zona y estado de cada obra: se traen con un JOIN
@@ -41,7 +51,6 @@ def obra_detalle(request, pk):
 
         return render(request, 'obras/obra_detalle.html', {'obra': obra, 'presupuestos':presupuestos})
     
-
 
 def obra_crear(request):
     try:

@@ -20,6 +20,10 @@
   --success-light: rgba(40, 167, 69, 0.08);
   --success-dark: #1e7e34;
 
+  --done-color: #6554c0;
+  --done-light: rgba(101, 84, 192, 0.1);
+  --done-dark: #403294;
+
   --font-main: "Poppins", "Segoe UI", sans-serif;
   --font-heading: "Poppins", "Segoe UI", sans-serif;
   /* --font-title: "Volkorn", sans-serif; */
@@ -296,6 +300,34 @@ textarea:focus {
   color: var(--danger-color);
   background-color: #c0847d4f;
   border-radius: 1rem;
+}
+
+.lozenge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  padding: 0.125rem var(--space-2);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+}
+.lozenge svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+}
+.lozenge--aceptado {
+  color: var(--success-dark);
+  background: var(--success-light);
+}
+.lozenge--finalizado {
+  color: var(--done-dark);
+  background: var(--done-light);
 }
 
 @media (max-width: 1024px) {

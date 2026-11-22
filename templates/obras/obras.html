@@ -51,15 +51,24 @@
         <div class="obras__mostrar__panel">
             {% for o in obras %}
             <div class="obras__mostrar__link">
-                <div class="obras__mostrar__card">
+                <div class="obras__mostrar__card {% if o.finalizada %}obras__mostrar__card--finalizada{% endif %}">
                     <div class="obras__data">
                         <div class="obras__data__header">
-                            <a href="{% url 'obras:obra_detalle' o.pk %}">
-                                <h1 class="obras__data__title">
-                                    {{o.cliente.nombre}} {{o.cliente.apellido}}
-                                </h1>     
-                            </a>
-                            
+                            <div class="obras__data__titulo">
+                                <a href="{% url 'obras:obra_detalle' o.pk %}">
+                                    <h1 class="obras__data__title">
+                                        {{o.cliente.nombre}} {{o.cliente.apellido}}
+                                    </h1>     
+                                </a> 
+                                {% if o.finalizada %}
+                                    <span class="lozenge lozenge--finalizado">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg>
+                                        Finalizada
+                                    </span>
+                                {% endif %}
+                                
+                            </div>
+                        
                             <div class="obras__data__acciones">
                                 <a href="{% url 'obras:obra_actualizar' o.pk %}" class="obras__acciones__editar">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m16.475 5.408l2.117 2.117m-.756-3.982L12.109 9.27a2.1 2.1 0 0 0-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 1 0-2.621-2.621"/><path d="M19 15v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3"/></g></svg>
@@ -88,6 +97,13 @@
                                     {{o.estado.estado}}
                                 </p> 
                             </div>
+
+                            {% if o.finalizada %}
+                            <div class="obras__data__item">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#6554c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>
+                                <p class="obras__data__estado">Finalizada el {{ o.fecha_fin|date:"d/m/Y" }}</p>
+                            </div>
+                            {% endif %}
                         </div>
 
                     </div>
