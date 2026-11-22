@@ -40,3 +40,23 @@ class Presupuesto(models.Model):
         ordering = ["fecha_actual", "obra"]
         verbose_name = "Presupuesto"
         verbose_name_plural = "Presupuestos"
+
+class DescripcionPredeterminada(models.Model):
+    """Texto que se propone como descripción impresa según el material y la superficie."""
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    superficie = models.ForeignKey(Superficie, on_delete=models.CASCADE)
+    texto = models.TextField()
+
+    def __str__(self):
+        return f"{self.material} + {self.superficie}"
+
+    class Meta:
+        verbose_name = "Descripción predeterminada"
+        verbose_name_plural = "Descripciones predeterminadas"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["material", "superficie"],
+                name="descripcion_material_superficie_unica",
+                violation_error_message="Ya existe una descripción predeterminada para ese material y superficie.",
+            ),
+        ]
