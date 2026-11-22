@@ -78,14 +78,6 @@
 
                     <div class="obradetalle__data__item">
                         <p class="obradetalle__data__titulo">
-                            Fecha de visita
-                        </p>
-                        {{ obra_form.fecha_visita }}
-                        {{ obra_form.fecha_visita.errors }}
-                    </div>
-
-                    <div class="obradetalle__data__item">
-                        <p class="obradetalle__data__titulo">
                             Estado
                         </p>
                         {{ obra_form.estado }}
@@ -114,6 +106,49 @@
                         </p>
                         {{ obra_form.observacion }}
                         {{ obra_form.observacion.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Fecha de inicio
+                        </p>
+                        {{ obra_form.fecha_inicio }}
+                        {{ obra_form.fecha_inicio.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Fecha de finalización
+                        </p>
+                        {{ obra_form.fecha_fin }}
+                        {{ obra_form.fecha_fin.errors }}
+                    </div>
+
+                    <div class="obradetalle__data__item" data-visitas>
+                        <p>
+                            Próximas visitas
+                        </p>
+                        {{ formset.management_form }}
+                        {{ formset.non_form_errors }}
+
+                        <div class="obradetalle__visitas" data-visitas-lista>
+                            {% for f in formset %}
+                                <div class="obradetalle__visitas__form visita-form">
+                                    {% for h in f.hidden_fields %}{{ h }}{% endfor %}
+                                    {{ f.fecha }}
+                                    {{ f.fecha.errors }}
+                                    {% if f.instance.pk %}<label>{{ f.DELETE }} Eliminar</label>{% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" data-visitas-agregar>Agregar fecha de visita</button>
+                        <template>
+                            <div class="obradetallle__visitas__form visita-form">
+                                {% for h in formset.empty_form.hidden_fields %}{{ h }}{% endfor %}
+                                {{ formset.empty_form.fecha }}
+                                <button type="button" data-visitas-quitar>Eliminar</button>
+                            </div>
+                        </template>
                     </div>
 
                 </div>

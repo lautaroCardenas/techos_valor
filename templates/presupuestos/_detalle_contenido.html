@@ -106,16 +106,13 @@
                     <dd>{{ presupuesto.obra.proxima_accion|default:"Sin acción programada" }}</dd>
                 </div>
                 <div class="presupuesto__obra__item">
-                    <dt>Fecha de visita</dt>
+                    <dt>Fechas de visita</dt>
                     <dd>
-                        {% if presupuesto.obra.fecha_visita %}
-                            {{ presupuesto.obra.fecha_visita.fecha|date:"d/m/Y" }}
-                            {% if presupuesto.obra.fecha_visita.numero %}
-                                (visita {{ presupuesto.obra.fecha_visita.numero }})
-                            {% endif %}
-                        {% else %}
-                            Sin visita programada
-                        {% endif %}
+                        {% for v in presupuesto.obra.fechas_visita.all %}
+                            <span>{{ v.fecha|date:"d/m/Y" }} (visita {{ v.numero }})</span>{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            Sin visitas programadas
+                        {% endfor %}
                     </dd>
                 </div>
                 <div class="presupuesto__obra__item">

@@ -42,14 +42,7 @@
                             {{obra.fecha_contacto}}
                         </p>
                     </div>
-                    <div class="obradetalle__data__item">
-                        <p class="obradetalle__data__titulo">
-                            Fecha de visita
-                        </p>
-                        <p class="obradetalle__data__valor">
-                            {{obra.fecha_visita}}
-                        </p>
-                    </div>
+                    
                     <div class="obradetalle__data__item">
                         <p class="obradetalle__data__titulo">
                             Estado
@@ -82,6 +75,19 @@
                         <p class="obradetalle__data__valor">
                             {{obra.observacion}}
                         </p>
+                    </div>
+
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Fechas de visita
+                        </p>
+                        {% for v in obra.fechas_visita.all %}
+                            <p class="obradetalle__data__valor">
+                                Visita {{ v.numero }}: {{ v.fecha|date:"d/m/Y" }}
+                            </p>
+                        {% empty %}
+                            <p class="obradetalle__data__valor">Sin visitas programadas</p>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="obradetalle__presupuestos">

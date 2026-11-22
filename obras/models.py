@@ -17,12 +17,6 @@ class Cliente(models.Model):
     def __str__(self):
         return f"{self.nombre} {self.apellido} - {self.telefono}"
 
-class FechaVisita(models.Model):
-    numero = models.IntegerField(null=True, validators=[valores_positivos])
-    fecha = models.DateField()
-
-    def __str__(self):
-        return f"{self.numero} - {self.fecha}"
 
 class EstadoObra(models.Model):
     estado = models.CharField(max_length=25, validators=[solo_letras])
@@ -46,7 +40,8 @@ class Obra(models.Model):
     estado = models.ForeignKey(EstadoObra, on_delete=models.SET_NULL, null=True)
     garantia = models.BooleanField(default=True)
     proxima_accion = models.ForeignKey(ProximaAccion, on_delete=models.SET_NULL, null=True, blank=True)
-    fecha_visita = models.ForeignKey(FechaVisita, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_fin = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ["cliente", "fecha_contacto"]
@@ -57,3 +52,11 @@ class Obra(models.Model):
         return (f"{self.cliente.nombre} {self.cliente.apellido} - "
                 f"Direccion: {self.direccion} | {self.zona.localidad}"
                 f"Estado: {self.estado}")
+
+class FechaVisita(models.Model):
+    numero = models.PositiveIntegerField(null=True, blank=True, validators=[valores_positivos])
+    fecha = models.DateField()
+    obra = models.ForeignKey(Obra, on_delete=models.CASCADE, related_name="fechas_visita", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.numero} - {self.fecha}"

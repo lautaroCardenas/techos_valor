@@ -250,6 +250,10 @@
   transition: all 0.2s ease;
 }
 
+.presupuestonuevo__btn__obra {
+  margin-bottom: 2rem;
+}
+
 .presupuesto__btn:hover,
 .presupuestonuevo__btn__obra:hover {
   color: #fff;
