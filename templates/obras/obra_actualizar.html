@@ -100,32 +100,27 @@
                         {{ obra_form.garantia.errors }}
                     </div>
 
-                    <div class="obradetalle__data__item">
-                        <p class="obradetalle__data__titulo">
-                            Observación
-                        </p>
-                        {{ obra_form.observacion }}
-                        {{ obra_form.observacion.errors }}
+                    <div class="obradetalle__data__item item__fechas">
+                        <div class="obradetalle__data__item">
+                            <p class="obradetalle__data__titulo">
+                                Fecha de inicio
+                            </p>
+                            {{ obra_form.fecha_inicio }}
+                            {{ obra_form.fecha_inicio.errors }}
+                        </div>
+
+                        <div class="obradetalle__data__item">
+                            <p class="obradetalle__data__titulo">
+                                Fecha de finalización
+                            </p>
+                            {{ obra_form.fecha_fin }}
+                            {{ obra_form.fecha_fin.errors }}
+                        </div>
                     </div>
 
-                    <div class="obradetalle__data__item">
-                        <p class="obradetalle__data__titulo">
-                            Fecha de inicio
-                        </p>
-                        {{ obra_form.fecha_inicio }}
-                        {{ obra_form.fecha_inicio.errors }}
-                    </div>
-
-                    <div class="obradetalle__data__item">
-                        <p class="obradetalle__data__titulo">
-                            Fecha de finalización
-                        </p>
-                        {{ obra_form.fecha_fin }}
-                        {{ obra_form.fecha_fin.errors }}
-                    </div>
 
                     <div class="obradetalle__data__item" data-visitas>
-                        <p>
+                        <p class="obradetalle__data__titulo">
                             Próximas visitas
                         </p>
                         {{ formset.management_form }}
@@ -141,29 +136,30 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <button type="button" data-visitas-agregar>Agregar fecha de visita</button>
+                        <button type="button" class="obradetalle__visitas__agregar" data-visitas-agregar>Agregar fecha de visita</button>
                         <template>
-                            <div class="obradetallle__visitas__form visita-form">
+                            <div class="obradetalle__visitas__form visita-form">
                                 {% for h in formset.empty_form.hidden_fields %}{{ h }}{% endfor %}
                                 {{ formset.empty_form.fecha }}
-                                <button type="button" data-visitas-quitar>Eliminar</button>
+                                <button type="button" class="obradetalle__visitas__quitar" data-visitas-quitar>Eliminar</button>
                             </div>
                         </template>
+                    </div>
+                    
+                    <div class="obradetalle__data__item">
+                        <p class="obradetalle__data__titulo">
+                            Observación
+                        </p>
+                        {{ obra_form.observacion }}
+                        {{ obra_form.observacion.errors }}
                     </div>
 
                 </div>
             </div>
 
             <div class="obradetalle__acciones">
-
-                <button type="submit" class="obraactualizar__btn">
-                    Guardar cambios
-                </button>
-
-                <a href="{% url 'obras:obra_detalle' obra.pk %}" class="obraactualizar__btn__cancelar">
-                    Cancelar
-                </a>
-
+                <a href="{% url 'obras:obra_detalle' obra.pk %}" class="obraactualizar__btn__cancelar">Cancelar</a>
+                <button type="submit" class="obraactualizar__btn">Guardar cambios</button>
             </div>
 
         </form>
