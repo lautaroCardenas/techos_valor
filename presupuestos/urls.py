@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import presupuesto_crear, presupuestos_total, presupuesto_detalle, presupuesto_borrar, presupuesto_actualizar, presupuesto_editar_form, presupuesto_pdf
+from .views import presupuesto_crear, presupuestos_total, presupuesto_detalle, presupuesto_borrar, presupuesto_actualizar, presupuesto_editar_form, presupuesto_pdf, descripcion_predeterminada
 
 app_name = 'presupuestos'
 
@@ -12,5 +12,6 @@ urlpatterns = [
     path('borrar/<int:pk>/', presupuesto_borrar, name="presupuesto_borrar"),
     path('actualizar/<int:pk>/', presupuesto_actualizar, name="presupuesto_actualizar"),
     path('editar/<int:pk>/', presupuesto_editar_form, name="presupuesto_editar_form"),
-    path('pdf/<int:pk>/', presupuesto_pdf, name="presupuesto_pdf")
+    path('pdf/<int:pk>/', presupuesto_pdf, name="presupuesto_pdf"),
+    path('descripcion-predeterminada/', descripcion_predeterminada, name="descripcion_predeterminada")
 ]

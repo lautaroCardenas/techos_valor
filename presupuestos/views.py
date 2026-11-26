@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Presupuesto
+from .models import Presupuesto, DescripcionPredeterminada
 from django.db.models import Q, Count, Prefetch
 from obras.models import Obra, ProximaAccion, EstadoObra
 from obras.forms import ObraForm, ClienteForm, FechaVisitaFormSet
 from .forms import PresupuestoForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.text import slugify
 from .pdf import generar_pdf_presupuesto
 
@@ -208,3 +208,18 @@ def presupuesto_pdf(request, pk):
     # inline: se abre en una pestaña del navegador, desde donde se puede descargar o imprimir.
     response['Content-Disposition'] = f'inline; filename="{nombre}.pdf"'
     return response
+
+
+def descripcion_predeterminada(request):
+    """Texto predeterminado para un material y una superficie (lo usa el JS de los formularios).
+    Como todas las vistas, exige sesión iniciada por el LoginRequiredMiddleware."""
+    try:
+        material_id = int(request.GET.get('material', ''))
+        superficie_id = int(request.GET.get('superficie', ''))
+    except ValueError:
+        return JsonResponse({'texto': ''})
+
+    predeterminada = DescripcionPredeterminada.objects.filter(
+        material_id=material_id, superficie_id=superficie_id
+    ).first()
+    return JsonResponse({'texto': predeterminada.texto if predeterminada else ''})
