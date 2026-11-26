@@ -200,23 +200,36 @@
 .presupuesto__aceptado,
 .presupuesto__rechazado,
 .presupuesto__dato__aceptado,
-.presupuesto__dato__noaceptado {
+.presupuesto__dato__noaceptado,
+.presupuesto__dato__utilizado {
   display: inline-block;
   margin-top: var(--space-2);
   padding: 0.2rem 0.85rem;
-  font-size: var(--fs-sm);
+  font-size: 1rem;
   font-weight: 500;
   border-radius: 999px;
 }
 .presupuesto__aceptado,
 .presupuesto__dato__aceptado {
-  color: var(--success-color);
-  background: #e6f4ea;
+  color: var(--success-dark);
+  background: var(--success-light);
 }
 .presupuesto__rechazado,
 .presupuesto__dato__noaceptado {
   color: var(--text-muted);
   background: #eceef1;
+}
+.presupuesto__dato__utilizado {
+  width: 100%;
+  color: var(--done-dark);
+  background-color: var(--done-light);
+}
+
+.presupuesto__meta__utilizado {
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-3);
+  text-align: center;
 }
 
 .presupuesto__botones {
@@ -228,7 +241,7 @@
 .presupuestos__btn__panel {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-2);
 }
 
@@ -248,6 +261,10 @@
   border: 1.5px solid var(--primary-color);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.presupuestonuevo__btn__obra {
+  margin-bottom: 2rem;
 }
 
 .presupuesto__btn:hover,
@@ -403,17 +420,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100%;
-  background: transparent;
-  color: var(--danger-color);
+  border-radius: var(--radius-md);
+  background: var(--danger-color);
+  color: var(--surface-color);
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: var(--space-1);
   transition: all 0.2s ease;
 }
 
 .presupuesto__btn__delete:hover {
-  background-color: var(--danger-color);
+  background-color: var(--danger-dark);
   color: var(--surface-color);
 }
 
@@ -422,7 +439,7 @@
   align-items: center;
   gap: var(--space-1);
   /* padding: 0.4rem 0.5rem 0.4rem 1.25rem; */
-  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-5);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-2);
   color: var(--primary-color);
   background: transparent;
   border: 1.5px solid var(--primary-color);
@@ -450,6 +467,37 @@
 .presupuestos__btns .presupuesto__btn:hover {
   color: inherit;
   background: transparent;
+}
+
+.presupuesto__finalizado__preview {
+  color: var(--done-dark);
+  border: 1.5px solid var(--done-color);
+  border-left: 0.5rem solid var(--done-color);
+}
+
+.presupuesto__aceptado__preview {
+  color: var(--success-dark);
+
+  border: 1.5px solid var(--success-color);
+  border-left: 0.5rem solid var(--success-color);
+}
+.presupuestos__btns.presupuesto__aceptado__preview:has(
+    .presupuesto__btn:hover
+  ) {
+  color: #fff;
+  background-color: var(--success-dark);
+}
+
+.presupuestos__btns.presupuesto__finalizado__preview:has(
+    .presupuesto__btn:hover
+  ) {
+  color: #fff;
+  background-color: var(--done-color);
+}
+
+.presupuestos__btns:has(.presupuesto__btn:hover) .lozenge {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .modal__confirmacion {
@@ -557,9 +605,10 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-3);
-  padding-bottom: var(--space-4);
-  margin-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-3);
+  /* padding-bottom: var(--space-4); */
+  /* margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-color); */
 }
 
 .presupuesto__eyebrow {
@@ -966,11 +1015,19 @@
     width: 100%;
   }
 
+  .presupuestos__btn__panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .presupuestos__btns {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0.25rem var(--space-2);
+  }
+
+  .lozenge {
+    display: none;
   }
   .presupuesto__tarjeta {
     flex-direction: column;
@@ -1005,7 +1062,12 @@
     align-items: center;
   }
   .presupuestodetalle__header {
-    align-items: start;
+    flex-direction: column;
+    align-self: start;
+    margin-right: 0;
+  }
+  .presupuestodetalle__acciones {
+    align-self: start;
   }
   .presupuesto__meta {
     align-items: start;

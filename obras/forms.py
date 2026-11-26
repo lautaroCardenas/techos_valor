@@ -1,24 +1,28 @@
 from django import forms
 from django.utils import timezone
-from .models import Obra, Cliente
+from .models import Obra, Cliente, FechaVisita
+from django.forms import inlineformset_factory  
 
 class ObraForm(forms.ModelForm):
 
-    fecha_visita = forms.DateField(required=False, label="Fecha de visita", widget=forms.DateInput(attrs={'type':'date'}))
-
     class Meta:
         model = Obra
-        fields = ['cliente', 'direccion', 'zona', 'observacion', 'negocio', 'estado', 'garantia', 'proxima_accion']
-    
-    def clean_fecha_visita(self):
-        fecha = self.cleaned_data.get('fecha_visita')
+        fields = ['cliente', 'direccion', 'zona', 'observacion', 'negocio', 'estado', 'garantia', 'proxima_accion', 'fecha_inicio', 'fecha_fin']
+        widgets =  {'fecha_inicio': forms.DateInput(attrs={'type':'date'}), 'fecha_fin': forms.DateInput(attrs={'type':'date'})}
 
-        if fecha and fecha < timezone.localdate():
-            raise forms.ValidationError(
-                "La fecha de visita no puede ser anterior a la fecha actual."
+    def clean(self):
+        cleaned_data = super().clean()
+
+        fecha_inicio = cleaned_data.get('fecha_inicio')
+        fecha_fin = cleaned_data.get('fecha_fin')
+
+        if fecha_inicio and fecha_fin and fecha_fin < fecha_inicio:
+            self.add_error(
+                'fecha_fin',
+                'La fecha de finalización no puede ser anterior a la fecha de inicio.'
             )
 
-        return fecha
+        return cleaned_data
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -58,3 +62,27 @@ class ClienteForm(forms.ModelForm):
             )
 
         return telefono
+
+class FechaVisitaForm(forms.ModelForm):
+    class Meta:
+        model = FechaVisita
+        fields = ['fecha']
+        widgets= {'fecha': forms.DateInput(attrs={'type':'date'})}
+
+    def clean_fecha(self):
+        fecha = self.cleaned_data.get('fecha')
+
+        if fecha and fecha < timezone.localdate():
+            raise forms.ValidationError(
+                "La fecha de visita no puede ser anterior a la fecha actual."
+            )
+
+        return fecha
+
+FechaVisitaFormSet = inlineformset_factory(
+    Obra,
+    FechaVisita, 
+    form=FechaVisitaForm, 
+    extra=1,
+    can_delete=True
+)

@@ -51,6 +51,16 @@
         <p class="presupuestonuevo__input presupuestonuevo__input__aceptado">
             {{form.aceptado.label_tag}}
             {{form.aceptado}} 
+            {% for error in form.aceptado.errors %}
+                <small class="error">{{ error }}</small>
+            {% endfor %}
+        </p>
+        <p class="presupuestonuevo__input presupuestonuevo__input__aceptado">
+            {{form.utilizado.label_tag}}
+            {{form.utilizado}} 
+            {% for error in form.utilizado.errors %}
+                <small class="error">{{ error }}</small>
+            {% endfor %}
         </p>
         {% if form.non_field_errors %}
             <div class="obra__form__errors" role="alert">

@@ -12,7 +12,7 @@ class PresupuestoForm(forms.ModelForm):
         model = Presupuesto
         # guardar_como_predeterminada no es del modelo: se lista acá solo para que
         # aparezca justo debajo de la descripción en los formularios con as_p.
-        fields = ['metro_2', 'precio_metro', 'material', 'superficie', 'obra', 'observacion', 'recargo_porcentaje', 'descripcion_impresa', 'guardar_como_predeterminada', 'aceptado']
+        fields = ['metro_2', 'precio_metro', 'material', 'superficie', 'obra', 'observacion', 'recargo_porcentaje', 'descripcion_impresa', 'guardar_como_predeterminada', 'aceptado', 'utilizado']
 
     def clean_metro_2(self):
         metro_2 = self.cleaned_data.get('metro_2')
@@ -31,6 +31,14 @@ class PresupuestoForm(forms.ModelForm):
         cleaned_data = super().clean()
         material = cleaned_data.get('material')
         superficie = cleaned_data.get('superficie')
+        aceptado = cleaned_data.get('aceptado')
+        utilizado = cleaned_data.get('utilizado')
+
+        if utilizado and not aceptado:
+            self.add_error(
+                'utilizado',
+                'No se puede utilizar un presupuesto que no fue aceptado.'
+            )
 
         # Respaldo por si el JS no completó la descripción (sin JS, o el formulario que
         # vuelve de la sesión al crear una obra). Solo al crear: al editar, una
