@@ -27,6 +27,7 @@ class Presupuesto(models.Model):
     descripcion_impresa = models.TextField(blank=True)
     obra = models.ForeignKey("obras.Obra", on_delete=models.RESTRICT) # Si el presupuesto se rechaza y se realiza uno nuevo, cada obra tendra mas de un presupuesto.
     monto = models.DecimalField(max_digits=10, decimal_places=3, validators=[valores_positivos])
+    utilizado = models.BooleanField(blank=True, null=True, default=False)
 
     def save(self, *args, **kwargs):
         subtotal = self.precio_metro * self.metro_2

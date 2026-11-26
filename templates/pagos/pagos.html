@@ -33,8 +33,8 @@
   <div class="pagos__panel">
     {% if presupuestos %}
       {% for p in presupuestos %}
-        <a href="{% url 'pagos:pago_detalle' p.obra.pk %}" class="pagos__obra__link">
-          <div class="pagos__obra">
+        <a href="{% url 'pagos:pago_detalle' p.obra.pk p.pk %}" class="pagos__obra__link">
+          <div class="pagos__obra {% if p.resto_actual == 0 %}pago__completado{%endif%}">
             <div class="pagos__obra__header">
               <h3 class="pagos__obra__titulo">
                 {{ p.obra.cliente.nombre }} {{ p.obra.cliente.apellido }}
@@ -45,9 +45,20 @@
                 <p class="pagos__obra__particular">Particular</p>
               {% endif %}
             </div>
-            <p class="pagos__obra__direccion">
-              {{ p.obra.direccion }} | {{p.obra.zona.localidad}}
-            </p>
+            <div class="pagos__data__item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="#6b7280" d="M16 10c0-2.21-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4s4-1.79 4-4m-6 0c0-1.1.9-2 2-2s2 .9 2 2s-.9 2-2 2s-2-.9-2-2"/><path fill="#6b7280" d="M11.42 21.81c.17.12.38.19.58.19s.41-.06.58-.19c.3-.22 7.45-5.37 7.42-11.82c0-4.41-3.59-8-8-8s-8 3.59-8 8c-.03 6.44 7.12 11.6 7.42 11.82M12 4c3.31 0 6 2.69 6 6c.02 4.44-4.39 8.43-6 9.74c-1.61-1.31-6.02-5.29-6-9.74c0-3.31 2.69-6 6-6"/></svg>
+              <p class="pagos__obra__direccion">
+                {{ p.obra.direccion }} | {{p.obra.zona.localidad}}
+              </p> 
+            </div>
+
+            <div class="pagos__data__item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="#6b7280" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>                 
+              <p class="pagos__obra__direccion">
+                  {{p.obra.cliente.telefono}}
+              </p> 
+            </div>
+           
             <div class="pagos__obra__montos">
               <div class="pagos__obra__monto">
                 <p class="pagos__obra__label">Monto</p>

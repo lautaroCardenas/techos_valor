@@ -2,17 +2,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Obra, FechaVisita
 from django.db.models import Q
 from django.contrib import messages
-from .forms import ObraForm, ClienteForm
+from .forms import ObraForm, ClienteForm, FechaVisitaFormSet
 from presupuestos.models import Presupuesto
+from django.db import transaction
+from django.utils import timezone
 
 # Create your views here.
 
 EXTRA_TAGS = 'obras_messages'
 
+def obra_finalizada(obra):
+    if obra.fecha_fin and obra.fecha_fin <= timezone.localdate():
+       obra_completada = True
+       
+    else:
+        obra_completada = False
+    return obra_completada
+        
+
 def obras_total(request):
     # El template muestra cliente, zona y estado de cada obra: se traen con un JOIN
     # en la misma consulta en vez de una consulta extra por obra.
-    obras = Obra.objects.select_related('cliente', 'zona', 'estado').order_by('fecha_contacto')
+    obras = (Obra.objects.select_related('cliente', 'zona', 'estado').prefetch_related("fechas_visita").order_by('fecha_contacto'))
 
     search_input = request.GET.get('search', '').strip()
     if (search_input):
@@ -26,10 +37,10 @@ def obras_total(request):
     return render(request, 'obras/obras.html', {'obras': obras, 'search_input': search_input})
 
 def obra_detalle(request, pk):
-    try:
-        obra = Obra.objects.select_related(
-            'cliente', 'zona', 'estado', 'proxima_accion', 'fecha_visita'
-        ).get(pk=pk)
+    
+        obra = get_object_or_404(Obra.objects.select_related(
+            'cliente', 'zona', 'estado', 'proxima_accion'
+        ).prefetch_related('fechas_visita'), pk=pk)
         presupuestos = list(Presupuesto.objects.filter(
             obra = obra
         ).select_related('material', 'superficie').order_by('fecha_actual'))
@@ -39,17 +50,16 @@ def obra_detalle(request, pk):
             pres.obra = obra
 
         return render(request, 'obras/obra_detalle.html', {'obra': obra, 'presupuestos':presupuestos})
-    except: # Si no encuentra la obra con el id ingresado como parámetro, retorna un template de not found.
-        return render(request, 'not_found.html')
-
+    
 
 def obra_crear(request):
     try:
         if request.method == 'POST':
             form = ObraForm(request.POST)
+            formset = FechaVisitaFormSet(request.POST, prefix='visitas')
 
-            if form.is_valid():
-                obra = guardar_obra_con_fecha(form)
+            if form.is_valid() and formset.is_valid():
+                obra = guardar_obra_con_visitas(form, formset)
                 campos_presupuesto = [
                     "metro_2",
                     "precio_metro",
@@ -76,12 +86,14 @@ def obra_crear(request):
 
                     return redirect("presupuestos:presupuestos_total")
         else:
+            formset = FechaVisitaFormSet(prefix='visitas')
             datos_obra = request.session.pop("obra_pendiente", {})
             form = ObraForm(initial=datos_obra)
         return render(request, 'obras/obra_crear.html', {
             'obra_form': form,
             'cliente_form': ClienteForm(),
             'abrir_modal_cliente': False,
+            'formset': formset
         })
     except:
         return render(request, 'not_found.html')
@@ -99,7 +111,7 @@ def cliente_crear(request):
             campos_obra = [
                 "cliente", "direccion", "zona", "observacion",
                 "negocio", "estado", "garantia",
-                "proxima_accion", "fecha_visita",
+                "proxima_accion", "fecha_visita", "fecha_inicio", "fecha_fin"
             ]
 
             campos_presupuesto = [
@@ -135,7 +147,7 @@ def cliente_crear(request):
             for campo in [
                 "cliente", "direccion", "zona", "observacion",
                 "negocio", "estado", "garantia",
-                "proxima_accion", "fecha_visita",
+                "proxima_accion", "fecha_visita", "fecha_inicio", "fecha_fin"
             ]
         }
         request.session["cliente_pendiente"] = request.POST.dict()
@@ -150,6 +162,7 @@ def cliente_crear(request):
             "obra_form": ObraForm(initial=datos_obra),
             "cliente_form": form_cliente,
             "abrir_modal_cliente": True,
+            'formset': FechaVisitaFormSet(prefix='visitas')
         })
     except:
         return render(request, 'not_found.html')
@@ -160,32 +173,13 @@ def obra_actualizar(request, pk):
     if request.method == 'POST':
         obra_form = ObraForm(request.POST, instance=obra)
         cliente_form = ClienteForm(request.POST, instance=obra.cliente)
+        formset = FechaVisitaFormSet(request.POST or None, instance=obra, prefix='visitas')
 
         obra_form.fields.pop('cliente') # Se van a editar los datos del cliente, no seleccionarlo de un desplegable.
 
-        if obra_form.is_valid() and cliente_form.is_valid():
+        if obra_form.is_valid() and cliente_form.is_valid() and formset.is_valid():
 
-            cliente_form.save()
-
-            obra = obra_form.save(commit=False)
-
-            fecha = obra_form.cleaned_data.get('fecha_visita')
-
-            if fecha:
-                ultima_fecha = FechaVisita.objects.order_by('-numero').first()
-                nuevo_numero = ultima_fecha.numero + 1 if ultima_fecha else 1
-
-                fecha_visita = FechaVisita.objects.create(
-                    numero=nuevo_numero,
-                    fecha=fecha
-                )
-
-                obra.fecha_visita = fecha_visita
-            else:
-                obra.fecha_visita = None
-
-            obra.save()
-            obra_form.save_m2m()
+            obra = guardar_obra_con_visitas(obra_form, formset, cliente_form)
 
             messages.success(request, 'Obra actualizada exitosamente.', extra_tags=EXTRA_TAGS)
 
@@ -194,35 +188,32 @@ def obra_actualizar(request, pk):
     else:
         obra_form = ObraForm(instance=obra)
         cliente_form = ClienteForm(instance=obra.cliente)
-
+        formset = FechaVisitaFormSet(instance=obra, prefix='visitas')
         obra_form.fields.pop('cliente')
 
     return render(request, 'obras/obra_actualizar.html', {
         'obra': obra,
         'obra_form': obra_form,
-        'cliente_form': cliente_form
+        'cliente_form': cliente_form, 
+        'formset': formset
     })
 
-def guardar_obra_con_fecha(form):
-    obra = form.save(commit=False)
 
-    fecha = form.cleaned_data.get('fecha_visita')
+def enumerar_visitas(obra):
+    visitas = list(obra.fechas_visita.all())
+    for i, v in enumerate(visitas, start=1):
+        v.numero = i
+    FechaVisita.objects.bulk_update(visitas, ['numero']) # Actualiza el número de todas las visitas de una.
 
-    if fecha:
-        ultima_fecha = FechaVisita.objects.order_by('-numero').first()
-        nuevo_numero = ultima_fecha.numero + 1 if ultima_fecha else 1
+def guardar_obra_con_visitas(obra_form, formset, cliente_form=None):
+    with transaction.atomic():
+        if cliente_form:
+            cliente_form.save()
 
-        fecha_visita = FechaVisita.objects.create(
-            numero=nuevo_numero,
-            fecha=fecha
-        )
-
-        obra.fecha_visita = fecha_visita
-    else:
-        obra.fecha_visita = None
-
-    obra.save()
-    form.save_m2m()
+        obra = obra_form.save()
+        formset.instance = obra
+        formset.save()
+        enumerar_visitas(obra)
 
     return obra
 
