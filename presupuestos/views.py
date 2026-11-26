@@ -8,6 +8,8 @@ from .forms import PresupuestoForm
 from django.http import HttpResponse
 from django.utils.text import slugify
 from .pdf import generar_pdf_presupuesto
+from django.urls import reverse
+from servicios.envio_unico import envio_unico
 
 # Create your views here.
 EXTRA_TAG = 'presupuestos_messages'
@@ -110,6 +112,12 @@ def presupuesto_detalle(request, pk):
     except:
         return render(request, 'not_found.html')
 
+# Con errores también redirige (deja el presupuesto pendiente para volver a mostrarlo).
+@envio_unico(
+    "Presupuesto cargado correctamente",
+    lambda request: reverse("presupuestos:presupuestos_total"),
+    exito_si=lambda request, response: "presupuesto_pendiente" not in request.session,
+)
 def presupuesto_crear(request):
     try:
         form = PresupuestoForm()

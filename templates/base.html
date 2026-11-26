@@ -72,9 +72,22 @@
       {% endblock %}
     </header>
     <main>{% block content %}{% endblock %}</main>
+  {% if messages %}
+  <div class="avisos" aria-live="polite">
+    {% for message in messages %}
+      {% if 'aviso_flotante' in message.tags %}
+        <div class="aviso" role="status">
+          <svg class="aviso__icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 12l5 5L20 7"/></svg>
+          <span>{{ message }}</span>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
   <script src="{% static 'js/modal-presupuesto.js' %}"></script>
   <script src="{% static 'js/detalle-presupuesto.js' %}?v=2"></script>
   <script src="{% static 'js/obra-crear.js' %}"></script>
+  <script src="{% static 'js/envio-unico.js' %}"></script>
   {% block extra_js %}{% endblock %}
   </body>
 </html>

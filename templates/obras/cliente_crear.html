@@ -1,3 +1,4 @@
+{% load envio_unico %}
 
 <div
     class="cliente__modal"
@@ -19,6 +20,7 @@
             class="cliente__form"
         >
             {% csrf_token %}
+            {% token_envio %}
             <input type="hidden" name="origen" value="obra_crear">
 
             {{ cliente_form.as_p }}

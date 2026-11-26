@@ -1,9 +1,11 @@
+{% load envio_unico %}
 
 <section class="presupuestonuevo" id="presupuesto__panel">
     <h2 class="presupuestonuevo__title">Nuevo presupuesto</h1>
 
     <form method="post" action="{% url 'presupuestos:presupuesto_crear' %}" class="presupuestonuevo__form">
         {% csrf_token %}
+        {% token_envio %}
 
         <div class="presupuestonuevo__obra">
             <button type="button" id="modal__abrir__obra" class="presupuestonuevo__btn__obra">

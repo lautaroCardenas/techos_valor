@@ -5,6 +5,8 @@ from obras.models import Obra
 from presupuestos.models import Presupuesto
 from django.db.models import Q, Sum, F, Value, DecimalField
 from django.db.models.functions import Coalesce
+from django.urls import reverse
+from servicios.envio_unico import envio_unico
 
 # Create your views here.
 def pagos_total(request):
@@ -75,6 +77,16 @@ def pago_detalle(request, pk):
         return render(request, 'not_found.html')
 
 
+def _destino_pago_duplicado(request):
+    obra_id = Presupuesto.objects.filter(
+        pk=request.POST.get("presupuesto_id") or None
+    ).values_list("obra_id", flat=True).first()
+    if obra_id:
+        return reverse("pagos:pago_detalle", args=[obra_id])
+    return reverse("pagos:pagos_total")
+
+
+@envio_unico("Pago cargado correctamente", _destino_pago_duplicado)
 def pago_crear(request):
     if request.method == 'POST':
         presupuesto = get_object_or_404(

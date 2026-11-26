@@ -1,3 +1,4 @@
+{% load envio_unico %}
 <section class="pagonuevo">
     <h2 class="pagonuevo__titulo">
         Nuevo pago
@@ -8,6 +9,7 @@
           class="pagonuevo__form">
 
         {% csrf_token %}
+        {% token_envio %}
 
         <input
             type="hidden"
