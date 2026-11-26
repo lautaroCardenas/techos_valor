@@ -32,12 +32,21 @@
                 <p class="presupuesto__fecha">Fecha: {{ presupuesto.fecha_actual }}</p>
                 {% if presupuesto.aceptado %}
                     <p class="presupuesto__dato__aceptado">Aceptado</p>
+                    
                 {% else %}
                     <p class="presupuesto__dato__noaceptado">No aceptado</p>
                 {% endif %}
-            </div>
-        </header>
 
+            </div>
+
+        </header>
+        <div class="presupuesto__meta__utilizado">
+            {% if presupuesto.utilizado and presupuesto.obra.finalizada %}
+                <p class="presupuesto__dato__utilizado">
+                    Presupuesto utilizado para finalizar la obra
+                </p>
+            {% endif %}
+        </div>
         <div class="presupuesto__resumen">
             <div class="presupuesto__tarjeta">
                 <span class="presupuesto__tarjeta__label">Superficie</span>
@@ -106,16 +115,13 @@
                     <dd>{{ presupuesto.obra.proxima_accion|default:"Sin acción programada" }}</dd>
                 </div>
                 <div class="presupuesto__obra__item">
-                    <dt>Fecha de visita</dt>
+                    <dt>Fechas de visita</dt>
                     <dd>
-                        {% if presupuesto.obra.fecha_visita %}
-                            {{ presupuesto.obra.fecha_visita.fecha|date:"d/m/Y" }}
-                            {% if presupuesto.obra.fecha_visita.numero %}
-                                (visita {{ presupuesto.obra.fecha_visita.numero }})
-                            {% endif %}
-                        {% else %}
-                            Sin visita programada
-                        {% endif %}
+                        {% for v in presupuesto.obra.fechas_visita.all %}
+                            <span>{{ v.fecha|date:"d/m/Y" }} (visita {{ v.numero }})</span>{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            Sin visitas programadas
+                        {% endfor %}
                     </dd>
                 </div>
                 <div class="presupuesto__obra__item">

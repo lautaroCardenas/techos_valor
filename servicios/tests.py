@@ -30,7 +30,10 @@ class EnvioUnicoTests(TestCase):
     def datos_obra(self, **extra):
         return {'cliente': self.cliente.pk, 'direccion': '455 y 132', 'zona': self.zona.pk,
                 'estado': self.estado.pk, 'negocio': '', 'garantia': 'on',
-                'origen': 'presupuestos', **extra}
+                'origen': 'presupuestos',
+                # Fechas de visita (formset): ninguna cargada.
+                'visitas-TOTAL_FORMS': '0', 'visitas-INITIAL_FORMS': '0',
+                **extra}
 
     def crear_obra(self, **extra):
         return Obra.objects.create(cliente=self.cliente, direccion='1 y 50', zona=self.zona,
@@ -76,7 +79,7 @@ class EnvioUnicoTests(TestCase):
         self.client.post(reverse('pagos:pago_crear'), datos)
         r = self.client.post(reverse('pagos:pago_crear'), datos)
         self.assertEqual(Pagos.objects.count(), 1)
-        self.assertRedirects(r, reverse('pagos:pago_detalle', args=[obra.pk]), fetch_redirect_response=False)
+        self.assertRedirects(r, reverse('pagos:pago_detalle', args=[obra.pk, pres.pk]), fetch_redirect_response=False)
 
     # Lo que NO se tiene que bloquear
 

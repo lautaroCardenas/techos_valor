@@ -7,7 +7,7 @@ app_name = 'pagos'
 
 urlpatterns = [
     path('', pagos_total, name="pagos_total"),
-    path('<int:pk>/', pago_detalle, name="pago_detalle"),
+    path('<int:obra_pk>/<int:presupuesto_pk>/', pago_detalle, name="pago_detalle"),
     path('crear/', pago_crear, name="pago_crear"),
     path('borrar/<int:pk>', pago_borrar, name="pago_borrar")
 ]

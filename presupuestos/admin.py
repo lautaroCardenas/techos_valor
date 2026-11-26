@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Presupuesto, Material, Superficie
+from .models import Presupuesto, Material, Superficie, DescripcionPredeterminada
 
 # Register your models here.
 @admin.register(Material)
@@ -16,3 +16,8 @@ class PresupuestoAdmin(admin.ModelAdmin):
     list_filter = ("obra__cliente", "aceptado")
     readonly_fields = ("monto", "fecha_actual")
     ordering = ("fecha_actual",)
+
+@admin.register(DescripcionPredeterminada)
+class DescripcionPredeterminadaAdmin(admin.ModelAdmin):
+    list_display = ("material", "superficie")
+    list_filter = ("material", "superficie")

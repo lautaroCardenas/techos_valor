@@ -35,7 +35,34 @@
         <div class="obranueva__campo">{{ obra_form.estado.as_field_group }}</div>
         <div class="obranueva__campo">{{ obra_form.garantia.as_field_group }}</div>
         <div class="obranueva__campo">{{ obra_form.proxima_accion.as_field_group }}</div>
-        <div class="obranueva__campo">{{ obra_form.fecha_visita.as_field_group }}</div>
+        <div class="obranueva__campo">{{ obra_form.fecha_inicio.as_field_group }}</div>
+        <div class="obranueva__campo">{{ obra_form.fecha_fin.as_field_group }}</div>
+        <div class="obranueva__campo" data-visitas>
+            <p>
+                Próximas visitas
+            </p>
+            {{ formset.management_form }}
+            {{ formset.non_form_errors }}
+
+            <div class="obranueva__visitas" data-visitas-lista>
+                {% for f in formset %}
+                    <div class="obranueva__visitas__form visita-form">
+                        {% for h in f.hidden_fields %}{{ h }}{% endfor %}
+                        {{ f.fecha }}
+                        {{ f.fecha.errors }}
+                        {% if f.instance.pk %}<label>{{ f.DELETE }} Eliminar</label>{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="obranueva__visitas__agregar" data-visitas-agregar>Agregar fecha de visita</button>
+            <template>
+                <div class="obranueva__visitas__form visita-form">
+                    {% for h in formset.empty_form.hidden_fields %}{{ h }}{% endfor %}
+                    {{ formset.empty_form.fecha }}
+                    <button type="button" class="obranueva__visitas__quitar" data-visitas-quitar>Eliminar</button>
+                </div>
+            </template>
+        </div>
 
         
         {% if obra_form.non_field_errors %}
@@ -49,6 +76,8 @@
         <button type="submit" class="obranueva__btn">{% if es_edicion %}Guardar cambios{% else %}Guardar obra{% endif %}</button>
     </form>
 </section>
+
+<script src="{% static 'js/visitas-formset.js' %}"></script>
 
     {% if not es_edicion %}
 {% include 'obras/cliente_crear.html' %}

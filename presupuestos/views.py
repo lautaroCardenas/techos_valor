@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Presupuesto
+from .models import Presupuesto, DescripcionPredeterminada
 from django.db.models import Q, Count, Prefetch
 from obras.models import Obra, ProximaAccion, EstadoObra
-from obras.forms import ObraForm, ClienteForm
+from obras.forms import ObraForm, ClienteForm, FechaVisitaFormSet
 from .forms import PresupuestoForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.text import slugify
 from .pdf import generar_pdf_presupuesto
 from django.urls import reverse
@@ -18,7 +18,7 @@ def presupuestos_total(request):
     # presupuestos = Presupuesto.objects.all().order_by('fecha_actual')
     obras = Obra.objects.annotate(
         cant_presupuestos=Count('presupuesto', distinct=True)
-    ).order_by('id')
+    ).filter(cant_presupuestos__gt=0).order_by('id')
 
     search_input = request.GET.get('search', '').strip()
     if search_input:
@@ -51,7 +51,7 @@ def presupuestos_total(request):
     # Cada tarjeta muestra datos de la obra y de todos sus presupuestos. Sin esto el
     # template hacía una consulta por cada cliente, zona, presupuesto, material, etc.
     obras = obras.distinct().select_related(
-        'cliente', 'zona', 'estado', 'proxima_accion', 'fecha_visita'
+        'cliente', 'zona', 'estado', 'proxima_accion'
     ).prefetch_related(
         Prefetch(
             'presupuesto_set',
@@ -81,8 +81,14 @@ def presupuestos_total(request):
     if datos_obra:
         obra_form = ObraForm(datos_obra)
         obra_form.is_valid()
+        if "visitas-TOTAL_FORMS" in datos_obra:
+            formset = FechaVisitaFormSet(datos_obra, prefix="visitas")
+            formset.is_valid()
+        else:
+            formset=FechaVisitaFormSet(prefix="visitas")
     else:
         obra_form = ObraForm()
+        formset = FechaVisitaFormSet(prefix="visitas")
     
     datos_cliente = request.session.pop("cliente_pendiente", None)
 
@@ -100,13 +106,13 @@ def presupuestos_total(request):
         "abrir_modal_presupuesto", False
     )
 
-    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form, 'cliente_form': cliente_form, 'abrir_modal_obra':abrir_modal_obra, 'abrir_modal_presupuesto': abrir_modal_presupuesto, 'abrir_modal_cliente': abrir_modal_cliente,})
+    return render(request, 'presupuestos/presupuestos.html', {'obras': obras, 'search_input': search_input, 'search_filter': search_filter, 'proxima_acciones': proxima_acciones, 'estado_filter': estado_filter, 'estados_obra': estados_obra, 'negocio_filter': negocio_filter, 'form': form, 'obra_form': obra_form, 'formset':formset, 'cliente_form': cliente_form, 'abrir_modal_obra':abrir_modal_obra, 'abrir_modal_presupuesto': abrir_modal_presupuesto, 'abrir_modal_cliente': abrir_modal_cliente,})
 
 def presupuesto_detalle(request, pk):
     try:
         pres = Presupuesto.objects.select_related(
             'material', 'superficie', 'obra__cliente', 'obra__zona',
-            'obra__estado', 'obra__proxima_accion', 'obra__fecha_visita',
+            'obra__estado', 'obra__proxima_accion'
         ).get(pk=pk)
         return render(request, 'presupuestos/presupuesto_detalle.html', {'presupuesto': pres})
     except:
@@ -210,3 +216,18 @@ def presupuesto_pdf(request, pk):
     # inline: se abre en una pestaña del navegador, desde donde se puede descargar o imprimir.
     response['Content-Disposition'] = f'inline; filename="{nombre}.pdf"'
     return response
+
+
+def descripcion_predeterminada(request):
+    """Texto predeterminado para un material y una superficie (lo usa el JS de los formularios).
+    Como todas las vistas, exige sesión iniciada por el LoginRequiredMiddleware."""
+    try:
+        material_id = int(request.GET.get('material', ''))
+        superficie_id = int(request.GET.get('superficie', ''))
+    except ValueError:
+        return JsonResponse({'texto': ''})
+
+    predeterminada = DescripcionPredeterminada.objects.filter(
+        material_id=material_id, superficie_id=superficie_id
+    ).first()
+    return JsonResponse({'texto': predeterminada.texto if predeterminada else ''})
