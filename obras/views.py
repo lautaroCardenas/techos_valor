@@ -4,6 +4,8 @@ from django.db.models import Q
 from django.contrib import messages
 from .forms import ObraForm, ClienteForm, FechaVisitaFormSet
 from presupuestos.models import Presupuesto
+from django.urls import reverse
+from servicios.envio_unico import envio_unico
 from django.db import transaction
 from django.utils import timezone
 
@@ -52,6 +54,19 @@ def obra_detalle(request, pk):
         return render(request, 'obras/obra_detalle.html', {'obra': obra, 'presupuestos':presupuestos})
     
 
+def _destino_cliente_duplicado(request):
+    if request.POST.get("origen") == "obra_crear":
+        return reverse("obras:obra_crear")
+    return reverse("presupuestos:presupuestos_total")
+
+
+# Con errores desde el modal de presupuestos también redirige: el guardado fue exitoso
+# solo si no se dejó la obra pendiente para volver a mostrarla.
+@envio_unico(
+    "Obra cargada correctamente",
+    lambda request: reverse("presupuestos:presupuestos_total"),
+    exito_si=lambda request, response: not request.session.get("abrir_modal_obra"),
+)
 def obra_crear(request):
     try:
         if request.method == 'POST':
@@ -98,6 +113,7 @@ def obra_crear(request):
     except:
         return render(request, 'not_found.html')
 
+@envio_unico("Cliente cargado correctamente", _destino_cliente_duplicado)
 def cliente_crear(request):
     try:
         if request.method != 'POST':

@@ -508,3 +508,65 @@ textarea:focus {
   font-style: normal;
   font-display: swap;
 }
+
+/* Carteles flotantes de "cargado correctamente" (base.html + js/envio-unico.js). */
+.avisos {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: calc(100vw - 2 * var(--space-4));
+  pointer-events: none;
+}
+
+.aviso {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  color: #fff;
+  font-weight: 500;
+  background: var(--success-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.18);
+  cursor: pointer;
+  pointer-events: auto;
+  animation: aviso-entrar 0.25s ease-out;
+}
+
+.aviso__icono {
+  flex-shrink: 0;
+}
+
+.aviso--saliendo {
+  animation: aviso-salir 0.25s ease-in forwards;
+}
+
+@keyframes aviso-entrar {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aviso-salir {
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+@media (max-width: 768px) {
+  .avisos {
+    top: auto;
+    bottom: var(--space-3);
+    right: var(--space-3);
+    left: var(--space-3);
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso,
+  .aviso--saliendo {
+    animation-duration: 0.01s;
+  }
+}

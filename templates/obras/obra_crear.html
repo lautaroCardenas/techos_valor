@@ -1,3 +1,4 @@
+{% load envio_unico %}
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'styles/obras.css' %}">
@@ -13,6 +14,7 @@
         class="obranueva__form"
     >
         {% csrf_token %}
+        {% token_envio %}
         {% if not es_edicion %}<input type="hidden" name="origen" value="obra_crear">{% endif %}
 
         <div class="obranueva__cliente">
